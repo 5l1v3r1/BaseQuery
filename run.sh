@@ -54,7 +54,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		echo "	       [3] Query"
 		echo "	       [4] Harvest Emails Using Hunter.io"
 		echo "	       [5] Clear importedDB.log"
-		echo "	       [6] Secret Message"
+		echo "	       [6] Export all passwords as a list"
+		echo "	       [7] Secret Message"
 		echo "	       [Q] Quit"
 		echo
 		read -p "Option Number-> " answer
@@ -477,6 +478,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				fi
 
 			elif [ "$answer" -eq 6 ];then
+				#  Export all passwords from the basequery database as a wordlist
+				printf "${GREEN}[+]${NC} Decompressing files\n"
+				./decompress.sh
+				./export_password_list.sh
+				printf "${GREEN}[+]${NC} Compressing files\n"
+				./compress.sh
+
+			elif [ "$answer" -eq 7 ];then
 				# Log Entry
 				echo "[+] run.sh COMMAND '5'	[ $(date) ]" >> ./Logs/ActivityLogs.log
 				echo
