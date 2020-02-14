@@ -78,7 +78,7 @@ sudo docker-compose run --name BaseQuery --workdir="/root/BaseQuery/" basequery 
     - You should delete the example file before running the program since it has fake data.
 1. Now that you have all of your files in the correct folder
     - Open up a terminal in the BaseQuery directory.
-    - Type ./install.sh to install all of the resources needed ( You only need to do this once )
+    - Type sudo ./install.sh to install all of the resources needed ( You only need to do this once )
     - Type ./run.sh to start the program 
 1. Follow the instructions on the screen
     - That's it, enjoy!
