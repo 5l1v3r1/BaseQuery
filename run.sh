@@ -54,7 +54,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		echo "	       [3] Query"
 		echo "	       [4] Harvest Emails Using Hunter.io"
 		echo "	       [5] Clear importedDB.log"
-		echo "	       [6] Export all passwords as a list"
+		echo "	       [6] Export All Passwords As A Password-List"
 		echo "	       [7] Secret Message"
 		echo "	       [Q] Quit"
 		echo
