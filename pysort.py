@@ -139,7 +139,7 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
@@ -158,7 +158,7 @@ def place_data(line: str, path: str):
                             fp.write(new_line + "\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     return
@@ -178,7 +178,7 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
@@ -197,7 +197,7 @@ def place_data(line: str, path: str):
                             fp.write(new_line + "\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     return
@@ -223,7 +223,7 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     else:
@@ -241,7 +241,7 @@ def place_data(line: str, path: str):
                             fp.write(new_line + "\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     return
@@ -261,7 +261,7 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
@@ -279,7 +279,7 @@ def place_data(line: str, path: str):
                             fp.write(new_line + "\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     return
@@ -304,7 +304,7 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
@@ -322,7 +322,7 @@ def place_data(line: str, path: str):
                             fp.write(new_line + "\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     return
@@ -342,7 +342,7 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
@@ -360,7 +360,7 @@ def place_data(line: str, path: str):
                             fp.write(new_line + "\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                                 if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     return
@@ -380,7 +380,7 @@ def place_data(line: str, path: str):
                         output_file.write("\n")
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
-                        with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                        with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                             if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt" not in fp2:
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt\n")
                         return
@@ -402,7 +402,7 @@ def place_data(line: str, path: str):
                         output_file.write(new_line + "\n")
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
-                        with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                        with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                             if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt\n")
                         return
@@ -423,7 +423,7 @@ def place_data(line: str, path: str):
                         output_file.write(new_line + "\n")
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
-                        with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                        with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                             if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt" not in fp2:
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt\n")
                     return
@@ -447,7 +447,7 @@ def place_data(line: str, path: str):
                         output_file.write(new_line + "\n")
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
-                        with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                        with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                             if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt" not in fp2:
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt\n")
                     return
@@ -467,7 +467,7 @@ def place_data(line: str, path: str):
                     fp.write("\n")
                     #  Adding, if not already added, the name of the file we modified so we
                     #  know which files to run "sort -u" on
-                    with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                    with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                         if path + "/data/NOTVALID/FAILED_TEST.txt" not in fp2:
                             fp2.write(path + "/data/NOTVALID/FAILED_TEST.txt\n")
                 return
@@ -488,7 +488,7 @@ def place_data(line: str, path: str):
                         fp.write(new_line + "\n")
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
-                        with open(path + "Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
+                        with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
                             if path + "/data/NOTVALID/FAILED_TEST.txt" not in fp2:
                                 fp2.write(path + "/data/NOTVALID/FAILED_TEST.txt\n")
                     return
