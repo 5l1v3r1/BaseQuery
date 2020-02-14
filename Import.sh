@@ -2,14 +2,14 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 12/1/2019
+# Date: 2/13/2019
 # Usage: ./Import
 # Usage: ./Import <Full path to export data to> (imports from normal ./PutYourDatabasesHere/)
 # Description:	Import.sh first checks to make sure the user is in the correct directory.
-#		Then, every file in the data directory will have their hash compared to the
-#		log file keeping track of all of the databases previously imported. If the 
-#		database has not been previously imported, the data is decompressed and the 
-#		folder is primed, lastly the pysort.py file is called. 
+#				Then, every file in the data directory will have their hash compared to the
+#				log file keeping track of all of the databases previously imported. If the 
+#				database has not been previously imported, the data is decompressed and the 
+#				folder is primed, lastly the pysort.py file is called. 
 
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -25,7 +25,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		dataDir="$(pwd)"
 
 		#  This loop is checking to see if any new files are in the PutYourDataBasesHere
-		#  directory.If not then there is no reason to decompress and compress everything
+		#  directory. If not then there is no reason to decompress and compress everything
 		let i=0  # used to count the amount of files not already imported 
 		declare -a arr
 		 while read -r inputfile;do
