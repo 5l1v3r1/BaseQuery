@@ -80,10 +80,16 @@ sudo docker-compose run --name BaseQuery --workdir="/root/BaseQuery/" basequery 
     - Open up a terminal in the BaseQuery directory.
     - Type ./install.sh to install all of the resources needed ( You only need to do this once )
     - Type ./run.sh to start the program 
-    - **Note that if you are using a laptop make sure it is plugged in. Importing databases uses A LOT of processing power and will make the import 4 times faster on average!**
 1. Follow the instructions on the screen
     - That's it, enjoy!
     - Contact me with any issues.
+    
+## Common Errors
+1. **Note that if you are using a laptop make sure it is plugged in. Importing databases uses A LOT of processing power and will make the import 4 times faster on average!**
+
+1. **Do NOT try to run BaseQuery in a Linux sub-system of Windows you will experience problems. Run in an Ubuntu VM!**
+
+***
 
 ### Import Times Based on Hardware Specifics
 
@@ -115,7 +121,7 @@ GNU bash, version 4.4.19
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/g666gle/BaseQuery/blob/master/LICENCE.md) file for details
+This project is licensed under the BSD-3-Clause License - see the [LICENSE.md](https://github.com/g666gle/BaseQuery/blob/master/LICENCE.md) file for details
 
 ## Disclaimer
 
