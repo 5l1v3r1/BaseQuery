@@ -3,6 +3,7 @@
 try:
     import os
     import time
+    import mmap
     import argparse
 except Exception as e:
     print(e)
@@ -44,8 +45,6 @@ Python Version:  3.7.1
 
 def check_duplicate(full_file_path: str, line: str) -> bool:
     """
-    THIS FUNCTION IS NOT IN USE BUT KEPT FOR LEGACY PURPOSES!
-
     This function takes in a path to the file and the specific line we want to check for duplicates with. First the file
     is checked to make sure it isn't empty, then the file is opened as a binary so we can store the lines as a mmap obj.
     Next if the line is a duplicate then False is returned else True
@@ -53,7 +52,6 @@ def check_duplicate(full_file_path: str, line: str) -> bool:
     :param line (str): The line being checked
     :return (bool): True if the line should be written to the file; else False
     """
-    import mmap
 
     #  Check to see if the file is not empty
     if not os.stat(full_file_path).st_size == 0:
@@ -139,8 +137,8 @@ def place_data(line: str, path: str):
                             fp.write("\n")
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
-                            with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
+                            with open(path + "/Logs/TouchedFilesDuringImport.txt") as fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
                         #  Get the new line from the emailPasswd list
@@ -159,7 +157,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     return
             else:  # The directory already exists
@@ -179,7 +177,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
                         #  Get the new line from the emailPasswd list
@@ -198,7 +196,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/0UTLIERS/0utliers.txt\n")
                     return
 
@@ -224,7 +222,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     else:
                         #  Get the new line from the emailPasswd list
@@ -242,7 +240,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     return
             else:  # The directory already exists
@@ -262,7 +260,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
                         #  Get the new line from the emailPasswd list
@@ -280,7 +278,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/0UTLIERS/0utliers.txt\n")
                     return
 
@@ -305,7 +303,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
                         #  Get the new line from the emailPasswd list
@@ -323,7 +321,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     return
             else:  # The directory already exists
@@ -343,7 +341,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     else:  # If the outlier dir already exists append the line to the file
                         #  Get the new line from the emailPasswd list
@@ -361,7 +359,7 @@ def place_data(line: str, path: str):
                             #  Adding, if not already added, the name of the file we modified so we
                             #  know which files to run "sort -u" on
                             with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                                if path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                                if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt"):
                                     fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/0UTLIERS/0utliers.txt\n")
                     return
 
@@ -381,7 +379,7 @@ def place_data(line: str, path: str):
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
                         with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                            if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt" not in fp2:
+                            if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt"):
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt\n")
                         return
                 elif folder_depth == 3:  # Check to see if the fourth letter is an outlier EX) exa!mple@example.com
@@ -403,7 +401,7 @@ def place_data(line: str, path: str):
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
                         with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                            if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                            if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt"):
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt\n")
                         return
                 return
@@ -424,7 +422,7 @@ def place_data(line: str, path: str):
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
                         with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                            if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt" not in fp2:
+                            if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt"):
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/" + fourth_letter + ".txt\n")
                     return
                 elif folder_depth == 3:  # The file does exist in the third dir but there is only 3 valid chars
@@ -448,7 +446,7 @@ def place_data(line: str, path: str):
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
                         with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                            if path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt" not in fp2:
+                            if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt"):
                                 fp2.write(path + "/data/" + first_letter + "/" + second_letter + "/" + third_letter + "/0UTLIERS/0utliers.txt\n")
                     return
 
@@ -468,7 +466,7 @@ def place_data(line: str, path: str):
                     #  Adding, if not already added, the name of the file we modified so we
                     #  know which files to run "sort -u" on
                     with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                        if path + "/data/NOTVALID/FAILED_TEST.txt" not in fp2:
+                        if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/NOTVALID/FAILED_TEST.txt"):
                             fp2.write(path + "/data/NOTVALID/FAILED_TEST.txt\n")
                 return
             else:  # The directory already exists
@@ -489,7 +487,7 @@ def place_data(line: str, path: str):
                         #  Adding, if not already added, the name of the file we modified so we
                         #  know which files to run "sort -u" on
                         with open(path + "/Logs/TouchedFilesDuringImport.txt", 'a') as fp2:
-                            if path + "/data/NOTVALID/FAILED_TEST.txt" not in fp2:
+                            if check_duplicate(path + "/Logs/TouchedFilesDuringImport.txt", path + "/data/NOTVALID/FAILED_TEST.txt"):
                                 fp2.write(path + "/data/NOTVALID/FAILED_TEST.txt\n")
                     return
             return
