@@ -58,25 +58,10 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			let orig_bytes=$orig_bytes+$file_bytes
 			#  Grabs just the letter of the dir ex) a
 			name="$(echo $uncompressed_dir | rev | cut -f 1 -d '/' | rev)"
-
-			#cut_away_letter_dir=${uncompressed_dir%/*}
-			#grab_last_dir="$(echo $cut_away_letter_dir | rev | cut -d '/' -f 1 | rev)"
-			#path_second_to_last_dir=${1%/*}
-
-			#echo $uncompressed_dir
-			#echo $cut_away_letter_dir
-			#echo $grab_last_dir
-			#echo $path_second_to_last_dir
-			#echo "$1/$name".tar.zst
-			#echo -C "$path_second_to_last_dir $grab_last_dir"
-
-			#echo "tar --use-compress-program=zstd -cvf $1/$name.tar.zst -C $1 $name"
-			#exit
 			if [ ! -f $1/$name.tar.zst ]; then
 				touch $1/$name.tar.zst
 			fi
 			tar --use-compress-program=zstd -cf $1/$name.tar.zst -C $1 $name && rm -rf $uncompressed_dir
-			#exit
 			_constr+="${arr[2]}"	
 		done< <(find "$1" -maxdepth 1 -type d | sort | tail -n +2)
 
