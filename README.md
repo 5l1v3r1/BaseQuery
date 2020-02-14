@@ -89,6 +89,8 @@ sudo docker-compose run --name BaseQuery --workdir="/root/BaseQuery/" basequery 
 
 1. **Do NOT try to run BaseQuery in a Linux sub-system of Windows you will experience problems. Run in an Ubuntu VM!**
 
+1. **NEVER hit CTRL-C or stop BaseQuery in any way during the Compress OR Decompression stage! This will corrupt one of the files**
+
 ***
 
 ### Import Times Based on Hardware Specifics
