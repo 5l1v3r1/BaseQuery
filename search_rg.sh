@@ -313,7 +313,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					else
 						#  The file does not exists
 						#  Check to make sure the directory exists and the file exists for 0UTLIERS
-						if [[ -d ./data/$first_char/$second_char/$third_char/0UTLIERS && -e ./data/$first_char/$second_char/$third_char/0UTLIERS/0utliers.txt ]];then
+						if [[ -d "./data/$first_char/$second_char/$third_char/0UTLIERS" && -e "./data/$first_char/$second_char/$third_char/0UTLIERS/0utliers.txt" ]];then
 							rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/0UTLIERS/0utliers.txt | while read -r Line;do
 								user_name="$(echo $Line | cut -f 1 -d ':')"
 								Password="$(echo $Line | cut -f 2- -d ':')"
@@ -349,7 +349,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						printf "${GREEN}Email Address: "$email"${NC}\n"
 					fi
 					#  The third letter directory does not exists
-					if [[ -d ./data/$first_char/$second_char/0UTLIERS && -e ./data/$first_char/$second_char/0UTLIERS/0utliers.txt ]];then
+					if [[ -d "./data/$first_char/$second_char/0UTLIERS" && -e "./data/$first_char/$second_char/0UTLIERS/0utliers.txt" ]];then
 						rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/0UTLIERS/0utliers.txt | while read -r Line;do
 							user_name="$(echo $Line | cut -f 1 -d ':')"
 							Password="$(echo $Line | cut -f 2- -d ':')"
@@ -385,7 +385,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					printf "${GREEN}Email Address: "$email"${NC}\n"
 				fi
 				#  The second letter directory does not exists
-				if [[ -d ./data/$first_char/0UTLIERS && -e ./data/$first_char/0UTLIERS/0utliers.txt ]];then
+				if [[ -d "./data/$first_char/0UTLIERS" && -e "./data/$first_char/0UTLIERS/0utliers.txt" ]];then
 					rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/0UTLIERS/0utliers.txt | while read -r Line;do
 						user_name="$(echo $Line | cut -f 1 -d ':')"
 						Password="$(echo $Line | cut -f 2- -d ':')"
