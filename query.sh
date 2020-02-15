@@ -9,12 +9,14 @@
 # Usage: ./query.sh test@
 # Usage: ./query.sh @example.com
 # Usage: ./query.sh /home/user/Desktop/file.txt
+# Usage: ./query.sh !PW:Mys3cretPassword
 #
 # Using an external BaseQuery directory
 # Usage: ./query.sh test@example.com /home/user/Desktop/data
 # Usage: ./query.sh test@ /home/user/Desktop/data
 # Usage: ./query.sh @example.com /home/user/Desktop/data
 # Usage: ./query.sh /home/user/Desktop/file.txt /home/user/Desktop/data
+# Usage: ./query.sh !PW:Mys3cretPassword /home/user/Desktop/data
 #
 # Description:	First query.sh checks to make sure that the user is in the correct
 #		directory. Checks to see if the query is a file or is a email address

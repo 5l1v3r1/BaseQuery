@@ -3,7 +3,7 @@ try:
     import os
     import sys
     import time
-except Exception as e:
+except ImportError as e:
     print(e)
     exit(1)
 
@@ -27,6 +27,7 @@ path = os.getcwd()
 def folder_spam():
     """
     This function creates all the nested files needed to store the data. [A-Z][0-9]
+    This creates 47988 directories
     :return: N/A
     """
     first_nest =  ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9')

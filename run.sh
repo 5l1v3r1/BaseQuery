@@ -5,8 +5,8 @@
 # Date: 2/13/2019
 # Usage: ./run.sh
 # Description:	This is the main file of the BaseQuery program. It houses the interactive menu
-#		and deals with all of the logic pertaining to the users choices. Calls all other 
-#		scripts within the program. 
+#				and deals with all of the logic pertaining to the users choices. Calls all other 
+#				scripts within the program. 
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -49,14 +49,18 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		echo 
 		echo
 		echo "Options:"
-		echo "	       [1] Import Your data"
-		echo "	       [2] Calculate Import Time"
-		echo "	       [3] Query"
-		echo "	       [4] Harvest Emails Using Hunter.io"
-		echo "	       [5] Clear importedDB.log"
-		echo "	       [6] Export All Passwords As A Password-List"
-		echo "	       [7] Secret Message"
-		echo "	       [Q] Quit"
+		echo "	       ------------------------------------------------"
+		echo "	       | [1] Import Your data                         |"
+		echo "	       | [2] Calculate Import Time                    |"
+		echo "	       | [3] Query                                    |"
+		echo "	       | [4] Harvest Emails Using Hunter.io           |"
+		echo "	       |----------------------------------------------|"
+		echo "	       | [5] Clear importedDB.log                     |"
+		echo "	       | [6] Export All Passwords As A Password-List  |"
+		echo "	       | [7] Sort and De-Duplicate All of BaseQuery   |"
+		echo "	       | [8] Secret Message                           |"
+		echo "	       | [Q] Quit                                     |"
+		echo "	       ------------------------------------------------"
 		echo
 		read -p "Option Number-> " answer
 
@@ -183,7 +187,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				printf "	ex) test@example.com			 [ Searches for all passwords associated with this address ]\n"
 				printf "	ex) test@				 [ Searches for all passwords for any email addresses starting with this username ]\n"
 				printf "	ex) @example.com			 [ Searches for all passwords for any email addresses ending with this domain name ]\n"
-				printf "	ex) /home/user/Desktop/email_list.txt	 [ Searches line by line through the file for all passwords for each email address ]\n\n"
+				printf "	ex) /home/user/Desktop/email_list.txt	 [ Searches line by line through the file for all passwords for each email address ]\n"
+				printf "	ex) !PW:Mys3cretPassword                 [ Searches for all users that have the provided password ]\n\n"
 				while true;do
 					read -p "('q' to quit) Email>> " email
 					#  If the user doesn't want to search an external BaseQuery directory
@@ -486,6 +491,12 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				./compress.sh
 
 			elif [ "$answer" -eq 7 ];then
+				#  Sort and de-duplicate the entire database
+				printf "${GREEN}[+]${NC} This might take a while...\n"
+				#  GO through every file in the data directory, using xargs is faster than -exec 
+				find "./data/" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+
+			elif [ "$answer" -eq 8 ];then
 				# Log Entry
 				echo "[+] run.sh COMMAND '5'	[ $(date) ]" >> ./Logs/ActivityLogs.log
 				echo

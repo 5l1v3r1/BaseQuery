@@ -36,7 +36,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			declare -a arr
 			 while read -r inputfile;do
 				arr=(${inputfile})
-				file_SHA_sum="$(sha256sum "$inputfile" | awk '{print$1}')"
+				file_SHA_sum="$(md5sum "$inputfile" | awk '{print$1}')"
 				#  check to see if the database has already been imported
 				if [ "$(rg $file_SHA_sum -c $pwd/Logs/importedDBS.log)" == "" ];then
 					let i=i+1
@@ -71,7 +71,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 				#  Read each file in the input files, in sorted order
 				find $dataDir -type f -exec echo {} \; | while read -r inputfile;do
-					file_SHA_sum="$(sha256sum "$inputfile" | awk '{print$1}')"
+					file_SHA_sum="$(md5sum "$inputfile" | awk '{print$1}')"
 					#  check to see if the database has already been imported
 					if [ "$(rg $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
 						# Gets the file name from the full path
@@ -95,6 +95,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						printf "[!] $inputfile SHASUM found in importedDBS.log\n" >> "$pwd"/Logs/ActivityLogs.log
 					fi
 				done
+
+				TouchedFiles="./Logs/TouchedFilesDuringImport.txt"
+				#  Before we compress lets sort the modified files and delete duplicate lines
+				./sort_unique.sh "$TouchedFiles"
+
 				printf "${YELLOW}[!]${NC} Compressing all data\n"
 				printf "[!] Compressing all data\n" >> "$pwd"/Logs/ActivityLogs.log
 

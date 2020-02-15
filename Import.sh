@@ -30,7 +30,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		declare -a arr
 		 while read -r inputfile;do
 			arr=(${inputfile})
-			file_SHA_sum="$(sha256sum "$dataDir"/PutYourDataBasesHere/"$inputfile" | awk '{print$1}')"
+			file_SHA_sum="$(md5sum $dataDir/PutYourDataBasesHere/$inputfile | awk '{print$1}')"
 			#  check to see if the database has already been imported
 			if [ "$(rg $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
 				let i=i+1
@@ -73,10 +73,9 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				python3.7 folderPrimer.py
 			fi
 
-
 			#  Read each file in the input files, in sorted order
 			find PutYourDataBasesHere -type f -exec echo {} \; | cut -f 2- -d "/" | while read -r inputfile;do
-				file_SHA_sum="$(sha256sum "$dataDir"/PutYourDataBasesHere/"$inputfile" | awk '{print$1}')"
+				file_SHA_sum="$(md5sum $dataDir/PutYourDataBasesHere/$inputfile | awk '{print$1}')"
 				#  check to see if the database has already been imported
 				if [ "$(rg $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
 
@@ -96,6 +95,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					printf "[!] $inputfile SHASUM already found in importedDBS.log\n" >> ./Logs/ActivityLogs.log
 				fi
 			done
+
+			TouchedFiles="./Logs/TouchedFilesDuringImport.txt"
+			#  Before we compress lets sort the modified files and delete duplicate lines
+			./sort_unique.sh "$TouchedFiles"
+
 			printf "${YELLOW}[!]${NC} Compressing all data\n"
 			printf "[!] Compressing all data\n" >> ./Logs/ActivityLogs.log
 			#  All data is stored. Time to compress

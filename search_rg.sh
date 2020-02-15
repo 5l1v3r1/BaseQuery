@@ -6,6 +6,7 @@
 # Usage: ./search_rg.sh test@example.com <optional filename>
 # Usage: ./search_rg.sh test@ <optional filename>
 # Usage: ./search_rg.sh @example.com <optional filename>
+# Usage: ./search_rg.sh !PW:Mys3cretPassword <optional filename>
 # Description:	search_rg.sh handles all of the logic for the searching algorithm. If a 
 #				filename is provided the results will be put in a file in the OutputFiles
 #				directory instead of written to stdout.
@@ -24,6 +25,107 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		user_name=$(echo "$1" | cut -d @ -f 1 | awk '{print tolower($0)}')
 		email=$(echo "$1" | cut -d : -f 1 | awk '{print tolower($0)}')
 		check_for_at=${1:0:1}
+		check_for_pwd=${1:0:4}
+
+		#  Check if the user wants to search for a password
+		if [ "$check_for_pwd" == "!PW:" ];then
+			#  Cut off the '!PW:' and keep the password
+			password=${1:4}
+			read -p "Output to a file? [y/n] " out_to_file 
+			# Checks input
+			while [[ "$out_to_file" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Output to a file? [y/n] " out_to_file 
+			done
+
+			timestamp="Null"
+			metadata="Null"
+			# Does the user want to output the results to a file
+			if [[ "$out_to_file" == [Yy] ]];then
+				# Make sure the outputfiles dir exists
+				if ! [ -d ./OutputFiles ];then
+					mkdir OutputFiles
+				fi
+
+				read -p "Do you want the outputed file to include a time-stamp? [y/n] " timestamp 
+				# Checks input
+				while [[ "$timestamp" != [YyNn] ]];do
+					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+					read -p "Do you want the outputed file to include a time-stamp? [y/n] " timestamp 
+				done
+
+				read -p "Would you like the output to include metadata? [y/n] " metadata
+				# Checks input
+				while [[ "$metadata" != [YyNn] ]];do
+					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+					read -p "Would you like the output to include metadata? [y/n] " metadata 
+				done
+				printf "${GREEN}[+]${NC} Outputting all results to ${GREEN}$(pwd)/OutputFiles/PWD_$password_output.txt${NC}\n"
+				printf "${GREEN}[+]${NC} Please wait this could take a few minutes!\n"
+
+			fi
+
+			# Decompress all files
+			printf "${GREEN}[+]${NC} Decompressing files\n"
+			./decompress.sh
+			
+			printf "${GREEN}[+]${NC} Starting search!\n"
+
+			start=$SECONDS
+			# check if the user wants the output to a file
+			if [[ "$out_to_file" == [Yy] ]];then 
+				#  check to see if the user wants to see metadata
+				if [[ "$metadata" == [Yy] ]];then
+					# The user wants timestamps
+					if [[ "$timestamp" == [Yy] ]];then
+						# add a time stamp
+						printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
+						printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
+						rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/  >> ./OutputFiles/"PWD_$password"_output.txt
+						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
+					# The user doesn't want timestamps
+					else
+						rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/ >> ./OutputFiles/"PWD_$password"_output.txt
+						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
+					fi
+
+				else
+					# The user wants a time stamp but no metadata
+					if [[ "$timestamp" == [Yy] ]];then
+						# add a time stamp
+						printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
+						printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
+						echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ )" >> ./OutputFiles/"PWD_$password"_output.txt
+						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
+					# No timestamp and no meta data
+					else
+						echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ )" >> ./OutputFiles/"PWD_$password"_output.txt
+						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
+					fi
+
+				fi 
+
+			else # Send the output to the console
+				#  check to see if the user wants to see metadata
+				if [[ "$metadata" == [Yy] ]];then
+					echo "$(rg -i "$password" ./data/)"
+				# No metadata
+				else
+					echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+				fi 
+			fi
+			stop=$SECONDS
+			diff=$(( stop - start ))
+			#  reading the number of uncompressed bytes in the data folder
+			echo
+			size_of_db_in_bytes=$(du -sb "./data"/ | cut -f 1)
+			#  Multiplying the bytes to get GB (Note: I divide by 1 because 'bc' is annoying and wont round if you dont)
+			size_of_db_in_gb=$(echo "scale=3; ($size_of_db_in_bytes * 0.000000001)"/1 | bc)
+			printf "${YELLOW}[!]${NC} Searched through your ${GREEN}$size_of_db_in_gb GB ${NC}BaseQuery database in $diff seconds!\n"
+			exit 0		
+		fi	
+
+##########################################################################################################################################
 
 		# Check to see if the user entered in a domain ex) @google.com
 		if [ "$check_for_at" == "@" ];then
@@ -125,10 +227,10 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		exit 0
 	fi
 
-	#########################################################################
-	# The above code deals with querying every file for a specific domain	#
-	# The below code deals with querying a specific username or file	    #
-	#########################################################################
+	#####################################################################################
+	# The above code deals with querying every file for a specific domain and password	#
+	#        The below code deals with querying a specific username or file	            #
+	#####################################################################################
 
 	# Deals with all the cases of having a file vs stdout
 	out_to_file="N"
