@@ -253,6 +253,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				    while [[ "$hunter_search" != [1-6Qq] ]];do
 				    	read -p "Option Number (1-6 or Q)-> " hunter_search
 				    done
+
+				    if [[ "$hunter_search" == [Qq] ]];then
+				    	break
+				    fi
+				    
 				    #  Domain Search
 				    if [ $hunter_search -eq 1 ];then
 
