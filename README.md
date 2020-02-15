@@ -71,19 +71,27 @@ sudo docker-compose run --name BaseQuery --workdir="/root/BaseQuery/" basequery 
 
 ## Getting Started Guide
 1. Place any databases that you have into the "PutYourDataBasesHere" folder
-    - As of right now, BaseQuery can only accept files in the format where each line is colon seperated "test@example.com:password" or "password:test@example.com"
+    - As of right now, BaseQuery can only accept files in the format where each line is colon separated "test@example.com:password" or "password:test@example.com"
     - It doesn't matter if the line formats are mixed up within the same file. Ex) The first line may be "email:password" and the second line can be "password:email"
     - One entry per line!! 
     - If you need a better visual there is an example.txt file in the folder "PutYourDataBasesHere"
     - You should delete the example file before running the program since it has fake data.
 1. Now that you have all of your files in the correct folder
     - Open up a terminal in the BaseQuery directory.
-    - Type ./install.sh to install all of the resources needed ( You only need to do this once )
+    - Type sudo ./install.sh to install all of the resources needed ( You only need to do this once )
     - Type ./run.sh to start the program 
-    - **Note that if you are using a laptop make sure it is plugged in. Importing databases uses A LOT of processing power and will make the import 4 times faster on average!**
 1. Follow the instructions on the screen
     - That's it, enjoy!
     - Contact me with any issues.
+    
+## Common Errors
+1. **Note that if you are using a laptop make sure it is plugged in. Importing databases uses A LOT of processing power and will make the import 4 times faster on average!**
+
+1. **Do NOT try to run BaseQuery in a Linux sub-system of Windows it will be EXTREMELY SLOW. Run in an Ubuntu VM!**
+
+1. **NEVER hit CTRL-C or stop BaseQuery in any way during the Compress OR Decompression stage! This will corrupt one of the files**
+
+***
 
 ### Import Times Based on Hardware Specifics
 
@@ -115,7 +123,7 @@ GNU bash, version 4.4.19
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/g666gle/BaseQuery/blob/master/LICENCE.md) file for details
+This project is licensed under the BSD-3-Clause License - see the [LICENSE.md](https://github.com/g666gle/BaseQuery/blob/master/LICENCE.md) file for details
 
 ## Disclaimer
 
