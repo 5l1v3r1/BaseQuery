@@ -2,7 +2,7 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 12/9/2019
+# Date: 2/16/2020
 # Usage: ./install.sh
 # Description:	This script when run first checks to make sure that the user is
 #		in the correct directory. Then, when provided with sudo privledges

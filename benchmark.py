@@ -11,7 +11,7 @@ except Exception as e:
 """
 Author Github:   https://github.com/g666gle      
 Author Twitter:  https://twitter.com/g666g1e
-Date:            12/1/2019
+Date:            2/16/2020
 Description:     This file is used by run.sh to calculate the amount of time it will take the current hardware to process
                  the user specified amount of lines. This is important because each user has different hardware. Import
                  mainly relies on the type of CPU and how many cores it has. On an Intel i7-7700 processor and 16GB of
@@ -23,7 +23,7 @@ Description:     This file is used by run.sh to calculate the amount of time it 
                  around, roughly, 8 characters.
                   
 Usage:           python3 benchmark.py <number of lines>
-Usage:           python3 benchmark.py 1000000
+Example:         python3 benchmark.py 1000000
 Version:	     2.0.0
 Python Version:  3.7.1
 """
@@ -32,7 +32,6 @@ if __name__ == '__main__':
     #  the arguments passed in
     args = sys.argv
     path = os.getcwd()
-    written_lines = 0
     # The amount of lines written in 30 Second
     total_lines = 0
 
@@ -61,17 +60,26 @@ if __name__ == '__main__':
             #  Open the fake DB and go through each file
             with open(path + "/Logs/temp_benchmark_DB/" + FILE_NAME, 'r') as fp:
                 try:
-                    start_time = time.time()
-                    for line in fp:
-                        #  For every 10,000th line print an update to the user
-                        if total_lines % 10000 == 0 and total_lines != 0:
-                            print(GREEN + "[+]" + NC + " Processing line number: " + str(total_lines))
-                        if (time.time() - start_time) <= AMT_SECONDS:
-                            if line.strip() != "":
-                                written_lines += place_data(line.strip(), path + "/Logs/temp_benchmark_DB/")
-                                total_lines += 1
-                        else:
-                            break
+                    #  Keep the touchedFiles log open and just pass a file-pointer to place_dataa instead of opening it every time
+                    with open(os.getcwd() + "/Logs/TouchedFilesDuringImport.txt", 'a') as touchedFiles:
+                        start_time = time.time()
+                        for line in fp:
+                            #  For every 10,000th line print an update to the user
+                            if total_lines % 10000 == 0 and total_lines != 0:
+                                print(GREEN + "[+]" + NC + " Processing line number: " + str(total_lines))
+                            if total_lines % 100000 == 0 and total_lines != 0:
+                                print(YELLOW + "[!]" + NC + " Cleaning up /Logs/TouchedFilesDuringImport.txt")
+                                # Sort and delete duplicates within the /Logs/TouchedFilesDuringImport.txt file
+                                os.system("sort -u -o /Logs/TouchedFilesDuringImport.txt /Logs/TouchedFilesDuringImport.txt")
+                            if (time.time() - start_time) <= AMT_SECONDS:
+                                line = line.strip()
+                                if line != "":
+                                    place_data(line, path + "/Logs/temp_benchmark_DB/", touchedFiles)
+                                    total_lines += 1
+                            else:
+                                break
+                    # Clear the TouchedFiles log; Don't sort and delete duplicates because this benchmark only tests the import time
+                    open(os.getcwd() + "/Logs/TouchedFilesDuringImport.txt", 'w').close()
                 except Exception as e:
                     print(RED + "Exception: " + str(e) + NC)
             stop_time = time.time()
