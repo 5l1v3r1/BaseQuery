@@ -2,7 +2,7 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 2/13/2019
+# Date: 2/13/2020
 # Usage: ./Import
 # Usage: ./Import <Full path to export data to> (imports from normal ./PutYourDatabasesHere/)
 # Description:	Import.sh first checks to make sure the user is in the correct directory.
@@ -73,6 +73,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				python3.7 folderPrimer.py
 			fi
 
+			
 			#  Read each file in the input files, in sorted order
 			find PutYourDataBasesHere -type f -exec echo {} \; | cut -f 2- -d "/" | while read -r inputfile;do
 				file_SHA_sum="$(md5sum $dataDir/PutYourDataBasesHere/$inputfile | awk '{print$1}')"

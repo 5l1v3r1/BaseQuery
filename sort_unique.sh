@@ -2,7 +2,7 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 2/13/2019
+# Date: 2/13/2020
 # Usage: ./sort_unique.sh /full/path/to/file.txt
 # Usage: ./sort_unique.sh --sortthisfile /full/path/to/file.txt
 # Description:	This script takes in a file which is composed of file

@@ -2,7 +2,7 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 2/13/2019
+# Date: 2/13/2020
 # Usage: ./export_password_list.sh
 # Usage: ./export_password_list.sh /full/path/to/dir/
 # Description:	This script will go through the ./data directory, go through each file

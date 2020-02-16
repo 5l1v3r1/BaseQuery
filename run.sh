@@ -516,6 +516,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				echo "Give credit where credit's due:"
 				printf "@ZacEllis on Github: \n\tHis fork of BaseQuery started to implement importing from an external directory, I stole some of his code\n"
 				printf "@VonStruddle on Github: \n\tWrote PyHunter, an awesome hunter.io interface, which I use (option 4) and made a nice interactive menu for\n"
+				printf "@jsemoun on Github: \n\tDM'd me good ideas to implement including a faster way to import databases and exporting the database as a password-list\n"
+
 				echo 
 
 			fi
