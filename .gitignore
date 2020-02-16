@@ -1,0 +1,6 @@
+data/
+PutYourDataBasesHere/
+OutputFiles/
+Logs/*.log
+Logs/*.yml
+Logs/temp_benchmark_DB/
