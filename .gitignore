@@ -1,6 +1,10 @@
-data/
-PutYourDataBasesHere/
-OutputFiles/
-Logs/*.log
-Logs/*.yml
-Logs/temp_benchmark_DB/
+/data/**
+/PutYourDataBasesHere/**
+/OutputFiles/**
+/Logs/temp_benchmark_DB/data/**
+
+/Logs/*.log
+/Logs/*.yml
+
+!DELETE_ME.txt
+!example.txt
