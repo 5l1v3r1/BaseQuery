@@ -2,9 +2,10 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 12/1/2019
+# Date: 2/17/2020
 # Usage: ./compress.sh
 # Usage: ./compress.sh /home/user/full/path/to/folder
+# Usage: ./compress.sh /home/user/full/path/to/folder --supress-output
 # Description:	This script takes in no parameters, checks to make sure that the
 #		user is in the correct directory and compresses every top
 #		level directory using Facebook's zstd standard. Giving each file
@@ -16,8 +17,8 @@ NC='\033[0m'  # No Color
 
 #  Make sure the user is in the BaseQuery directory
 if [ "${PWD##*/}" == "BaseQuery" ];then
+	#  Compress the entire data/ dir
 	if [ $# -eq 0 ];then
-
 		let orig_bytes=0
 		declare -a arr
 		#  Find all of the uncompressed directories 
@@ -47,7 +48,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			printf "[!] Compressed number of bytes	$compressed_bytes\n" >> ./Logs/ActivityLogs.log
 		fi
 
-	elif [ $# -eq 1 ];then
+	elif [[ $# -eq 1 || $# -eq 2 ]];then
 		# $1 should be the parent directory to the database ex) /home/user/Desktop/data
 		let orig_bytes=0
 		declare -a arr
@@ -61,26 +62,29 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			if [ ! -f $1/$name.tar.zst ]; then
 				touch $1/$name.tar.zst
 			fi
-			tar --use-compress-program=zstd -cf $1/$name.tar.zst -C $1 $name && rm -rf $uncompressed_dir
+			tar --use-compress-program=zstd -cf "$1"/"$name".tar.zst -C "$1" "$name" && rm -rf "$uncompressed_dir"
 			_constr+="${arr[2]}"	
 		done< <(find "$1" -maxdepth 1 -type d | sort | tail -n +2)
 
-		compressed_bytes=$(du -sb "$1" | cut -f 1)
-		if [[ $orig_bytes -ne 0 && $compressed_bytes -ne 0 ]];then
-			comp_div_ori=$( awk -v orig=$orig_bytes -v comp=$compressed_bytes 'BEGIN{printf("%.2f\n",comp/orig*100)}' )
-			multiples_compressed=$(( $orig_bytes/$compressed_bytes ))
-			echo 
-			printf "${RED}[*] Your data is $multiples_compressed""x times smaller! (~$comp_div_ori%% of the original size)${NC}\n"
-			printf "${YELLOW}[!] Original number of bytes	$orig_bytes${NC}\n"
-			printf "${YELLOW}[!] Compressed number of bytes	$compressed_bytes${NC}\n"
+		#  If the output is not supressed
+		if [ $# -eq 1 ];then 
+			compressed_bytes=$(du -sb "$1" | cut -f 1)
+			if [[ $orig_bytes -ne 0 && $compressed_bytes -ne 0 ]];then
+				comp_div_ori=$( awk -v orig=$orig_bytes -v comp=$compressed_bytes 'BEGIN{printf("%.2f\n",comp/orig*100)}' )
+				multiples_compressed=$(( $orig_bytes/$compressed_bytes ))
+				echo 
+				printf "${RED}[*] Your data is $multiples_compressed""x times smaller! (~$comp_div_ori%% of the original size)${NC}\n"
+				printf "${YELLOW}[!] Original number of bytes	$orig_bytes${NC}\n"
+				printf "${YELLOW}[!] Compressed number of bytes	$compressed_bytes${NC}\n"
 
-			printf "[*] Your data is $multiples_compressed""x times smaller! (~$percentage_compressed%% of the original size)\n" >> ./Logs/ActivityLogs.log
-			printf "[!] Original number of bytes	$orig_bytes\n" >> ./Logs/ActivityLogs.log
-			printf "[!] Compressed number of bytes	$compressed_bytes\n" >> ./Logs/ActivityLogs.log
+				printf "[*] Your data is $multiples_compressed""x times smaller! (~$percentage_compressed%% of the original size)\n" >> ./Logs/ActivityLogs.log
+				printf "[!] Original number of bytes	$orig_bytes\n" >> ./Logs/ActivityLogs.log
+				printf "[!] Compressed number of bytes	$compressed_bytes\n" >> ./Logs/ActivityLogs.log
+			fi
 		fi
 	else
 		echo "ERROR: Wrong amount of parameters passed!"
-		printf "ERROR: Wrong amount of parameters passed!" >> ./Logs/ActivityLogs.log
+		printf "ERROR: Wrong amount of parameters passed! [compress.sh]" >> ./Logs/ActivityLogs.log
 	fi
 	
 else

@@ -2,7 +2,7 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 12/1/2019
+# Date: 2/17/2020
 # Usage: ./search_rg.sh test@example.com <optional filename>
 # Usage: ./search_rg.sh test@ <optional filename>
 # Usage: ./search_rg.sh @example.com <optional filename>
@@ -108,7 +108,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			else # Send the output to the console
 				#  check to see if the user wants to see metadata
 				if [[ "$metadata" == [Yy] ]];then
-					echo "$(rg -i "$password" ./data/)"
+					echo "$(rg -i ":$password" ./data/)"
 				# No metadata
 				else
 					echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
@@ -134,6 +134,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			while [[ "$out_to_file" != [YyNn] ]];do
 				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
 				read -p "Output to a file? [y/n] " out_to_file 
+			done
+
+			read -p "Search using low-disk-space mode? [y/n] " low_disk_space_mode 
+			# Checks input
+			while [[ "$low_disk_space_mode" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Search using low-disk-space mode? [y/n] " low_disk_space_mode 
 			done
 
 			timestamp="Null"
@@ -163,69 +170,250 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 			fi
 
-			# Decompress all files
-			printf "${GREEN}[+]${NC} Decompressing files\n"
-			./decompress.sh
-			
-			printf "${GREEN}[+]${NC} Starting search!\n"
+			if [[ "$low_disk_space_mode" == [Nn] ]];then
+				# Decompress all files
+				printf "${GREEN}[+]${NC} Decompressing files\n"
+				./decompress.sh
 
-			start=$SECONDS
-			# check if the user wants the output to a file
-			if [[ "$out_to_file" == [Yy] ]];then 
-				#  check to see if the user wants to see metadata
-				if [[ "$metadata" == [Yy] ]];then
-					# The user wants timestamps
-					if [[ "$timestamp" == [Yy] ]];then
-						# add a time stamp
-						printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
-						printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
-						rg --ignore-case --color never --heading --line-number --stats "$1" ./data/  >> ./OutputFiles/"$1"_output.txt
-						printf "\n" >> ./OutputFiles/"$1"_output.txt
-					# The user doesn't want timestamps
+				printf "${GREEN}[+]${NC} Starting search!\n"
+
+				start=$SECONDS
+				# check if the user wants the output to a file
+				if [[ "$out_to_file" == [Yy] ]];then 
+					#  check to see if the user wants to see metadata
+					if [[ "$metadata" == [Yy] ]];then
+						# The user wants timestamps
+						if [[ "$timestamp" == [Yy] ]];then
+							# add a time stamp
+							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
+							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
+							rg --ignore-case --color never --heading --line-number --stats "$1" ./data/  >> ./OutputFiles/"$1"_output.txt
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						# The user doesn't want timestamps
+						else
+							rg --ignore-case --color never --heading --line-number --stats "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						fi
+
 					else
-						rg --ignore-case --color never --heading --line-number --stats "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
-						printf "\n" >> ./OutputFiles/"$1"_output.txt
-					fi
+						# The user wants a time stamp but no metadata
+						if [[ "$timestamp" == [Yy] ]];then
+							# add a time stamp
+							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
+							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
+							echo "$(rg -iN --no-filename --no-heading $1 ./data/ )" >> ./OutputFiles/"$1"_output.txt
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						# No timestamp and no meta data
+						else
+							echo "$(rg -iN --no-filename --no-heading $1 ./data/ )" >> ./OutputFiles/"$1"_output.txt
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						fi
 
-				else
-					# The user wants a time stamp but no metadata
-					if [[ "$timestamp" == [Yy] ]];then
-						# add a time stamp
-						printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
-						printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
-						echo "$(rg -iN --no-filename --no-heading "$1" ./data/ )" >> ./OutputFiles/"$1"_output.txt
-						printf "\n" >> ./OutputFiles/"$1"_output.txt
-					# No timestamp and no meta data
+					fi 
+
+				else # Send the output to the console
+					#  check to see if the user wants to see metadata
+					if [[ "$metadata" == [Yy] ]];then
+						echo "$(rg -i $1 ./data/)"
+					# No metadata
 					else
-						echo "$(rg -iN --no-filename --no-heading "$1" ./data/ )" >> ./OutputFiles/"$1"_output.txt
-						printf "\n" >> ./OutputFiles/"$1"_output.txt
-					fi
+						echo "$(rg -iN --no-filename --no-heading $1 ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+					fi 
+				fi
+				stop=$SECONDS
+				diff=$(( stop - start ))
+				#  reading the number of uncompressed bytes in the data folder
+				echo
+				size_of_db_in_bytes=$(du -sb "./data"/ | cut -f 1)
+				#  Multiplying the bytes to get GB (Note: I divide by 1 because 'bc' is annoying and wont round if you dont)
+				size_of_db_in_gb=$(echo "scale=3; ($size_of_db_in_bytes * 0.000000001)"/1 | bc)
+				printf "${YELLOW}[!]${NC} Searched through your ${GREEN}$size_of_db_in_gb GB ${NC}BaseQuery database in $diff seconds!\n"
+				exit 0
+			fi #  Low disk space = No
 
-				fi 
+			if [[ "$low_disk_space_mode" == [Yy] ]];then
+				start=$SECONDS
+				# check if the user wants the output to a file
+				if [[ "$out_to_file" == [Yy] ]];then 
+					#  check to see if the user wants to see metadata
+					if [[ "$metadata" == [Yy] ]];then
+						# The user wants timestamps
+						if [[ "$timestamp" == [Yy] ]];then
+							# add a time stamp
+							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
+							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
 
-			else # Send the output to the console
-				#  check to see if the user wants to see metadata
-				if [[ "$metadata" == [Yy] ]];then
-					echo "$(rg -i "$1" ./data/)"
-				# No metadata
-				else
-					echo "$(rg -iN --no-filename --no-heading "$1" ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
-				fi 
-			fi
-			stop=$SECONDS
-			diff=$(( stop - start ))
-			#  reading the number of uncompressed bytes in the data folder
-			echo
-			size_of_db_in_bytes=$(du -sb "./data"/ | cut -f 1)
-			#  Multiplying the bytes to get GB (Note: I divide by 1 because 'bc' is annoying and wont round if you dont)
-			size_of_db_in_gb=$(echo "scale=3; ($size_of_db_in_bytes * 0.000000001)"/1 | bc)
-			printf "${YELLOW}[!]${NC} Searched through your ${GREEN}$size_of_db_in_gb GB ${NC}BaseQuery database in $diff seconds!\n"
-			exit 0
+							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+								#  If we have a compressed directory
+								if [[ "$file" = *.tar.zst ]];then
+									#  check to make sure you dont decompress the working directory
+									if [ "$file" != "data/" ];then
+										# Grabs the name of the file from the path
+										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										# decompress the .tar.zst files
+										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+										# Search the directory for the desired string
+										rg --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name"  >> ./OutputFiles/"$1"_output.txt
+										# Instead of recompressing the directory we will jsut delete the
+										# uncompressed version and keep the compressed version
+										rm -f ./data/"$name".tar.zst
+								#  We have an uncompressed directory
+								else
+									# Search the directory for the desired string
+									rg --ignore-case --color never --heading --line-number --stats "$1" "$file"  >> ./OutputFiles/"$1"_output.txt
+								fi	
+							done
+							#  Create seperation
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+							
+						# The user doesn't want timestamps
+						else
+							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+								#  If we have a compressed directory
+								if [[ "$file" = *.tar.zst ]];then
+									#  check to make sure you dont decompress the working directory
+									if [ "$file" != "data/" ];then
+										# Grabs the name of the file from the path
+										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										# decompress the .tar.zst files
+										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+										# Search the directory for the desired string
+										rg --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
+										# Instead of recompressing the directory we will jsut delete the
+										# uncompressed version and keep the compressed version
+										rm -f ./data/"$name".tar.zst
+								#  We have an uncompressed directory
+								else
+									# Search the directory for the desired string
+									rg --ignore-case --color never --heading --line-number --stats "$1" "$file" >> ./OutputFiles/"$1"_output.txt
+								fi	
+							done
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						fi
+
+					else
+						# The user wants a time stamp but no metadata
+						if [[ "$timestamp" == [Yy] ]];then
+							# add a time stamp
+							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
+							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
+
+							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+								#  If we have a compressed directory
+								if [[ "$file" = *.tar.zst ]];then
+									#  check to make sure you dont decompress the working directory
+									if [ "$file" != "data/" ];then
+										# Grabs the name of the file from the path
+										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										# decompress the .tar.zst files
+										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+										# Search the directory for the desired string
+										echo "$(rg -iN --no-filename --no-heading $1 ./data/$name )" >> ./OutputFiles/"$1"_output.txt
+										# Instead of recompressing the directory we will jsut delete the
+										# uncompressed version and keep the compressed version
+										rm -f ./data/"$name".tar.zst
+								#  We have an uncompressed directory
+								else
+									# Search the directory for the desired string
+									echo "$(rg -iN --no-filename --no-heading $1 $file )" >> ./OutputFiles/"$1"_output.txt
+								fi	
+							done
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						# No timestamp and no meta data
+						else
+							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+								#  If we have a compressed directory
+								if [[ "$file" = *.tar.zst ]];then
+									#  check to make sure you dont decompress the working directory
+									if [ "$file" != "data/" ];then
+										# Grabs the name of the file from the path
+										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										# decompress the .tar.zst files
+										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+										# Search the directory for the desired string
+										echo "$(rg -iN --no-filename --no-heading $1 ./data/$name )" >> ./OutputFiles/"$1"_output.txt
+										# Instead of recompressing the directory we will jsut delete the
+										# uncompressed version and keep the compressed version
+										rm -f ./data/"$name".tar.zst
+								#  We have an uncompressed directory
+								else
+									# Search the directory for the desired string
+									echo "$(rg -iN --no-filename --no-heading $1 $file )" >> ./OutputFiles/"$1"_output.txt
+								fi	
+							done
+							printf "\n" >> ./OutputFiles/"$1"_output.txt
+						fi
+
+					fi 
+
+				else # Send the output to the console
+					#  check to see if the user wants to see metadata
+					if [[ "$metadata" == [Yy] ]];then
+						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+							#  If we have a compressed directory
+							if [[ "$file" = *.tar.zst ]];then
+								#  check to make sure you dont decompress the working directory
+								if [ "$file" != "data/" ];then
+									# Grabs the name of the file from the path
+									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									# decompress the .tar.zst files
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+									# Search the directory for the desired string
+									echo "$(rg -i $1 ./data/$name)"
+									# Instead of recompressing the directory we will jsut delete the
+									# uncompressed version and keep the compressed version
+									rm -f ./data/"$name".tar.zst
+							#  We have an uncompressed directory
+							else
+								# Search the directory for the desired string
+								echo "$(rg -i $1 $file)"
+							fi	
+						done
+					# No metadata
+					else
+						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+							#  If we have a compressed directory
+							if [[ "$file" = *.tar.zst ]];then
+								#  check to make sure you dont decompress the working directory
+								if [ "$file" != "data/" ];then
+									# Grabs the name of the file from the path
+									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									# decompress the .tar.zst files
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+									# Search the directory for the desired string
+									echo "$(rg -iN --no-filename --no-heading $1 ./data/$name | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+									# Instead of recompressing the directory we will jsut delete the
+									# uncompressed version and keep the compressed version
+									rm -f ./data/"$name".tar.zst
+							#  We have an uncompressed directory
+							else
+								# Search the directory for the desired string
+								echo "$(rg -iN --no-filename --no-heading $1 $file | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+							fi	
+						done
+					fi # metadata = y
+				fi # out to file
+				stop=$SECONDS
+				diff=$(( stop - start ))
+				#  reading the number of uncompressed bytes in the data folder
+				echo
+				size_of_db_in_bytes=$(du -sb "./data"/ | cut -f 1)
+				#  Multiplying the bytes to get GB (Note: I divide by 1 because 'bc' is annoying and wont round if you dont)
+				size_of_db_in_gb=$(echo "scale=3; ($size_of_db_in_bytes * 0.000000001)"/1 | bc)
+				printf "${YELLOW}[!]${NC} Searched through your ${GREEN}$size_of_db_in_gb GB ${NC}BaseQuery database in $diff seconds!\n"
+				exit 0
+			fi #  Low disk space = Yes
 		fi # user did not start with a '@'
 	else
 		printf "${RED}ERROR:${NC} ./data directory is empty please import files first!\n"
 		exit 0
-	fi
+	fi # data dir not empty
 
 	#####################################################################################
 	# The above code deals with querying every file for a specific domain and password	#

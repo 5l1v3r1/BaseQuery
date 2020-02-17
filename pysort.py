@@ -40,7 +40,6 @@ Python Version:  3.7.1
 # use only dirs that are not compressed in byte statistics comprress.sh
 # Option to choose certain dirs to check for @gmail.com
 # Automatically find the amount of lines in import using wc
-# have a check to make sure a file  exists before compressing or decompressing.sh
 
 
 def check_duplicate(full_file_path: str, line: str) -> bool:

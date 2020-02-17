@@ -2,7 +2,7 @@
 
 # Author Github:   https://github.com/g666gle
 # Author Twitter:  https://twitter.com/g666g1e
-# Date: 12/1/2019
+# Date: 2/17/2020
 # Usage:   ./decompress.sh  (This decompresses everything in the default data/ in BaseQuery)
 # Usage:   ./decompress.sh -f <name of compressed file>  (This file must be within the data/ directory)
 # Usage:   ./decompress.sh -p <full path to compressed file>  (This file can be anywhere on disk)
@@ -28,7 +28,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				#  Grabs the name of the file from the path
 				name="$(echo $compressed_file | cut -f 2- -d "/" | cut -f 1 -d '.')"
 				# decompress the .tar.zst files
-				tar --use-compress-program=zstd -xf ./data/$name.tar.zst && rm -rf data/"$name".tar.zst				
+				tar --use-compress-program=zstd -xf ./data/"$name".tar.zst && rm -rf data/"$name".tar.zst				
 			fi	
 		done
 	#  Decompress a specific file outside of the BaseQuery dir
@@ -47,7 +47,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							file_name_no_extention=$(echo "$file_name_with_extentions"| cut  -d '.' -f 1)
 							#  Decompress the archive [error sent to dev null to supress a warrning about removing leading '/']
 							#echo tar --use-compress-program=zstd -xf "$compressed_file" -C "$OPTARG" --one-top-level="$file_name_no_extention" 2> /dev/null && rm -rf "$compressed_file"
-							tar --use-compress-program=zstd -xf $compressed_file -C $OPTARG 2> /dev/null && rm -rf $compressed_file
+							tar --use-compress-program=zstd -xf "$compressed_file" -C "$OPTARG" 2> /dev/null && rm -rf "$compressed_file"
 						done
 					fi
 				else
@@ -74,7 +74,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					#  This strips away the file from the full path
 					directory_path="$(dirname $OPTARG)"
 					# decompress the .tar.zst file
-					tar --use-compress-program=zstd -xf $OPTARG -C $directory_path && rm -rf $OPTARG	
+					tar --use-compress-program=zstd -xf "$OPTARG" -C "$directory_path" && rm -rf "$OPTARG"	
 				else
 					printf "${RED}[!]${NC} File $OPTARG not found!\n"
 					exit 1
