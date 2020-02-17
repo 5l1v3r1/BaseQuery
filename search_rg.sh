@@ -94,6 +94,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
+								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
@@ -118,6 +119,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
+								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
@@ -149,6 +151,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
+								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
@@ -173,6 +176,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
+								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
@@ -202,6 +206,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
 								rm -f ./data/"$name".tar.zst
+							fi
 						#  We have an uncompressed directory
 						else
 							# Search the directory for the desired string
@@ -226,6 +231,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
 								rm -f ./data/"$name".tar.zst
+							fi
 						#  We have an uncompressed directory
 						else
 							# Search the directory for the desired string
@@ -385,6 +391,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
+									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
@@ -411,6 +418,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
+									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
@@ -442,6 +450,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
+									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
@@ -466,6 +475,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
+									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
@@ -495,6 +505,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
+								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
@@ -518,6 +529,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
+								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string

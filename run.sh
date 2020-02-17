@@ -15,7 +15,7 @@ NC='\033[0m'  # No Color
 
 # change the window size to fit the art
 # requires xterm as a dependency 
-resize -s 25 134
+resize -s 30 134
 
 #ctrl+C
 trap finish INT
