@@ -22,8 +22,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 	# If directory is not empty
 	if [ "$(ls -A ./data)" ]; then
 		# Grab everything before the @ sign
-		user_name=$(echo "$1" | cut -d @ -f 1 | awk '{print tolower($0)}')
-		email=$(echo "$1" | cut -d : -f 1 | awk '{print tolower($0)}')
+		user_name=$(echo $1 | cut -d @ -f 1 | awk '{print tolower($0)}')
+		email=$(echo $1 | cut -d : -f 1 | awk '{print tolower($0)}')
 		check_for_at=${1:0:1}
 		check_for_pwd=${1:0:4}
 
@@ -40,34 +40,32 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 			timestamp="Null"
 			metadata="Null"
+
+			read -p "Do you want the output to include a time-stamp? [y/n] " timestamp 
+			# Checks input
+			while [[ "$timestamp" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Do you want the output to include a time-stamp? [y/n] " timestamp 
+			done
+
+			read -p "Would you like the output to include metadata? [y/n] " metadata
+			# Checks input
+			while [[ "$metadata" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Would you like the output to include metadata? [y/n] " metadata 
+			done
+
 			# Does the user want to output the results to a file
 			if [[ "$out_to_file" == [Yy] ]];then
 				# Make sure the outputfiles dir exists
 				if ! [ -d ./OutputFiles ];then
 					mkdir OutputFiles
 				fi
-
-				read -p "Do you want the outputed file to include a time-stamp? [y/n] " timestamp 
-				# Checks input
-				while [[ "$timestamp" != [YyNn] ]];do
-					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
-					read -p "Do you want the outputed file to include a time-stamp? [y/n] " timestamp 
-				done
-
-				read -p "Would you like the output to include metadata? [y/n] " metadata
-				# Checks input
-				while [[ "$metadata" != [YyNn] ]];do
-					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
-					read -p "Would you like the output to include metadata? [y/n] " metadata 
-				done
 				printf "${GREEN}[+]${NC} Outputting all results to ${GREEN}$(pwd)/OutputFiles/PWD_$password_output.txt${NC}\n"
 				printf "${GREEN}[+]${NC} Please wait this could take a few minutes!\n"
 
 			fi
 
-			# Decompress all files
-			printf "${GREEN}[+]${NC} Decompressing files\n"
-			./decompress.sh
 			
 			printf "${GREEN}[+]${NC} Starting search!\n"
 
@@ -81,13 +79,54 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						# add a time stamp
 						printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
 						printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
-						rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/  >> ./OutputFiles/"PWD_$password"_output.txt
+						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+							#  If we have a compressed directory
+							if [[ "$file" = *.tar.zst ]];then
+								#  check to make sure you dont decompress the working directory
+								if [ "$file" != "data/" ];then
+									# Grabs the name of the file from the path
+									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									# decompress the .tar.zst files
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+									# Search the directory for the desired string
+									rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+									# Instead of recompressing the directory we will jsut delete the
+									# uncompressed version and keep the compressed version
+									rm -f ./data/"$name".tar.zst
+							#  We have an uncompressed directory
+							else
+								# Search the directory for the desired string
+								rg --ignore-case --color never --heading --line-number --stats ":$password" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+							fi	
+						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
 					# The user doesn't want timestamps
 					else
-						rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/ >> ./OutputFiles/"PWD_$password"_output.txt
+						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+							#  If we have a compressed directory
+							if [[ "$file" = *.tar.zst ]];then
+								#  check to make sure you dont decompress the working directory
+								if [ "$file" != "data/" ];then
+									# Grabs the name of the file from the path
+									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									# decompress the .tar.zst files
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+									# Search the directory for the desired string
+									rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									# Instead of recompressing the directory we will jsut delete the
+									# uncompressed version and keep the compressed version
+									rm -f ./data/"$name".tar.zst
+							#  We have an uncompressed directory
+							else
+								# Search the directory for the desired string
+								rg --ignore-case --color never --heading --line-number --stats ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+							fi	
+						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
-					fi
+
+					fi # timestamp
 
 				else
 					# The user wants a time stamp but no metadata
@@ -95,25 +134,109 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						# add a time stamp
 						printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
 						printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"PWD_$password"_output.txt
-						echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ )" >> ./OutputFiles/"PWD_$password"_output.txt
+						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+							#  If we have a compressed directory
+							if [[ "$file" = *.tar.zst ]];then
+								#  check to make sure you dont decompress the working directory
+								if [ "$file" != "data/" ];then
+									# Grabs the name of the file from the path
+									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									# decompress the .tar.zst files
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+									# Search the directory for the desired string
+									rg -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									# Instead of recompressing the directory we will jsut delete the
+									# uncompressed version and keep the compressed version
+									rm -f ./data/"$name".tar.zst
+							#  We have an uncompressed directory
+							else
+								# Search the directory for the desired string
+								rg -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+							fi	
+						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
 					# No timestamp and no meta data
 					else
-						echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ )" >> ./OutputFiles/"PWD_$password"_output.txt
+						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+							#  If we have a compressed directory
+							if [[ "$file" = *.tar.zst ]];then
+								#  check to make sure you dont decompress the working directory
+								if [ "$file" != "data/" ];then
+									# Grabs the name of the file from the path
+									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									# decompress the .tar.zst files
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+									# Search the directory for the desired string
+									rg -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									# Instead of recompressing the directory we will jsut delete the
+									# uncompressed version and keep the compressed version
+									rm -f ./data/"$name".tar.zst
+							#  We have an uncompressed directory
+							else
+								# Search the directory for the desired string
+								rg -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+							fi	
+						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
-					fi
 
-				fi 
+					fi #timestamp
+				fi # metadata
 
 			else # Send the output to the console
 				#  check to see if the user wants to see metadata
 				if [[ "$metadata" == [Yy] ]];then
-					echo "$(rg -i ":$password" ./data/)"
+					#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+					find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+						#  If we have a compressed directory
+						if [[ "$file" = *.tar.zst ]];then
+							#  check to make sure you dont decompress the working directory
+							if [ "$file" != "data/" ];then
+								# Grabs the name of the file from the path
+								name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+								# decompress the .tar.zst files
+								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+								# Search the directory for the desired string
+								rg -i ":$password" ./data/"$name"
+								# Instead of recompressing the directory we will jsut delete the
+								# uncompressed version and keep the compressed version
+								rm -f ./data/"$name".tar.zst
+						#  We have an uncompressed directory
+						else
+							# Search the directory for the desired string
+							rg -i ":$password" "$file"
+						fi	
+					done
+					
 				# No metadata
 				else
-					echo "$(rg -iN --no-filename --no-heading ":$password" ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
-				fi 
-			fi
+					#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+					find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+						#  If we have a compressed directory
+						if [[ "$file" = *.tar.zst ]];then
+							#  check to make sure you dont decompress the working directory
+							if [ "$file" != "data/" ];then
+								# Grabs the name of the file from the path
+								name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+								# decompress the .tar.zst files
+								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+								# Search the directory for the desired string
+								rg -iN --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+								# Instead of recompressing the directory we will jsut delete the
+								# uncompressed version and keep the compressed version
+								rm -f ./data/"$name".tar.zst
+						#  We have an uncompressed directory
+						else
+							# Search the directory for the desired string
+							rg -iN --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+						fi	
+					done
+					
+				fi #metadata
+			fi # out to file
+
+			# Report metrics to user
 			stop=$SECONDS
 			diff=$(( stop - start ))
 			#  reading the number of uncompressed bytes in the data folder
@@ -123,12 +246,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			size_of_db_in_gb=$(echo "scale=3; ($size_of_db_in_bytes * 0.000000001)"/1 | bc)
 			printf "${YELLOW}[!]${NC} Searched through your ${GREEN}$size_of_db_in_gb GB ${NC}BaseQuery database in $diff seconds!\n"
 			exit 0		
-		fi	
+		fi	# Check for !PW
 
+		# Above Checks for Passwords
 ##########################################################################################################################################
-
-		# Check to see if the user entered in a domain ex) @google.com
+		# Below check to see if the user entered in a domain ex) @google.com
 		if [ "$check_for_at" == "@" ];then
+
 			read -p "Output to a file? [y/n] " out_to_file 
 			# Checks input
 			while [[ "$out_to_file" != [YyNn] ]];do
@@ -145,30 +269,31 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 			timestamp="Null"
 			metadata="Null"
+
+			read -p "Do you want to include a time-stamp? [y/n] " timestamp 
+			# Checks input
+			while [[ "$timestamp" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Do you want to include a time-stamp? [y/n] " timestamp 
+			done
+
+			read -p "Would you like the output to include metadata? [y/n] " metadata
+			# Checks input
+			while [[ "$metadata" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Would you like the output to include metadata? [y/n] " metadata 
+			done
+
 			# Does the user want to output the results to a file
 			if [[ "$out_to_file" == [Yy] ]];then
 				# Make sure the outputfiles dir exists
 				if ! [ -d ./OutputFiles ];then
 					mkdir OutputFiles
 				fi
-
-				read -p "Do you want the outputed file to include a time-stamp? [y/n] " timestamp 
-				# Checks input
-				while [[ "$timestamp" != [YyNn] ]];do
-					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
-					read -p "Do you want the outputed file to include a time-stamp? [y/n] " timestamp 
-				done
-
-				read -p "Would you like the output to include metadata? [y/n] " metadata
-				# Checks input
-				while [[ "$metadata" != [YyNn] ]];do
-					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
-					read -p "Would you like the output to include metadata? [y/n] " metadata 
-				done
 				printf "${GREEN}[+]${NC} Outputting all results to ${GREEN}$(pwd)/OutputFiles/$1_output.txt${NC}\n"
 				printf "${GREEN}[+]${NC} Please wait this could take a few minutes!\n"
-
 			fi
+
 
 			if [[ "$low_disk_space_mode" == [Nn] ]];then
 				# Decompress all files
@@ -201,11 +326,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							# add a time stamp
 							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
 							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
-							echo "$(rg -iN --no-filename --no-heading $1 ./data/ )" >> ./OutputFiles/"$1"_output.txt
+							rg -iN --no-filename --no-heading $1 ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						# No timestamp and no meta data
 						else
-							echo "$(rg -iN --no-filename --no-heading $1 ./data/ )" >> ./OutputFiles/"$1"_output.txt
+							rg -iN --no-filename --no-heading $1 ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						fi
 
@@ -214,12 +339,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				else # Send the output to the console
 					#  check to see if the user wants to see metadata
 					if [[ "$metadata" == [Yy] ]];then
-						echo "$(rg -i $1 ./data/)"
+						rg -i $1 ./data/
 					# No metadata
 					else
-						echo "$(rg -iN --no-filename --no-heading $1 ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+						rg -iN --no-filename --no-heading $1 ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
 					fi 
 				fi
+
+				# Report metrics to the user
 				stop=$SECONDS
 				diff=$(( stop - start ))
 				#  reading the number of uncompressed bytes in the data folder
@@ -311,14 +438,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										echo "$(rg -iN --no-filename --no-heading $1 ./data/$name )" >> ./OutputFiles/"$1"_output.txt
+										rg -iN --no-filename --no-heading $1 ./data/$name >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									echo "$(rg -iN --no-filename --no-heading $1 $file )" >> ./OutputFiles/"$1"_output.txt
+									rg -iN --no-filename --no-heading $1 $file >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -335,14 +462,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										echo "$(rg -iN --no-filename --no-heading $1 ./data/$name )" >> ./OutputFiles/"$1"_output.txt
+										rg -iN --no-filename --no-heading $1 ./data/$name >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									echo "$(rg -iN --no-filename --no-heading $1 $file )" >> ./OutputFiles/"$1"_output.txt
+									rg -iN --no-filename --no-heading $1 $file >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -364,14 +491,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									echo "$(rg -i $1 ./data/$name)"
+									rg -i $1 ./data/$name
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								echo "$(rg -i $1 $file)"
+								rg -i $1 $file
 							fi	
 						done
 					# No metadata
@@ -387,14 +514,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									echo "$(rg -iN --no-filename --no-heading $1 ./data/$name | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+									rg -iN --no-filename --no-heading $1 ./data/$name | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								echo "$(rg -iN --no-filename --no-heading $1 $file | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/'')"
+								rg -iN --no-filename --no-heading $1 $file | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
 							fi	
 						done
 					fi # metadata = y
