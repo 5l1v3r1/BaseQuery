@@ -5,8 +5,8 @@
 # Date: 2/13/2019
 # Usage: ./run.sh
 # Description:	This is the main file of the BaseQuery program. It houses the interactive menu
-#				and deals with all of the logic pertaining to the users choices. Calls all other 
-#				scripts within the program. 
+#				and deals with all of the logic pertaining to the users choices. 
+
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -188,7 +188,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				printf "	ex) test@				 [ Searches for all passwords for any email addresses starting with this username ]\n"
 				printf "	ex) @example.com			 [ Searches for all passwords for any email addresses ending with this domain name ]\n"
 				printf "	ex) /home/user/Desktop/email_list.txt	 [ Searches line by line through the file for all passwords for each email address ]\n"
-				printf "	ex) !PW:Mys3cretPassword                 [ Searches for all users that have the provided password ]\n\n"
+				printf "	ex) !PW:Mys3cretPassword                 [ Searches for all users that have the specified password ]\n\n"
 				while true;do
 					read -p "('q' to quit) Email>> " email
 					#  If the user doesn't want to search an external BaseQuery directory
@@ -226,6 +226,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							break
 						fi
 					fi
+					echo
+					printf "Please enter enter an email address in one of the following formats \n"
+					printf "	ex) test@example.com			 [ Searches for all passwords associated with this address ]\n"
+					printf "	ex) test@				 [ Searches for all passwords for any email addresses starting with this username ]\n"
+					printf "	ex) @example.com			 [ Searches for all passwords for any email addresses ending with this domain name ]\n"
+					printf "	ex) /home/user/Desktop/email_list.txt	 [ Searches line by line through the file for all passwords for each email address ]\n"
+					printf "	ex) !PW:Mys3cretPassword                 [ Searches for all users that have the specified password ]\n\n"
 				done
 
 				#  Compress all of the data
@@ -544,7 +551,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				printf "@ZacEllis on Github: \n\tHis fork of BaseQuery started to implement importing from an external directory, I stole some of his code\n"
 				printf "@VonStruddle on Github: \n\tWrote PyHunter, an awesome hunter.io interface, which I use (option 4) and made a nice interactive menu for\n"
 				printf "@jsemoun on Github: \n\tDM'd me good ideas to implement including a faster way to import databases and exporting the database as a password-list\n"
-
+				printf "@BurntSushi on Github:\n\tWrote RipGrep which is extreamly fast and used many times throughout BaseQuery\n"
 				echo 
 
 			fi

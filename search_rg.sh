@@ -105,7 +105,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									#  Match the exact case but it can be a substring 
 									if [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-										rg -u --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u --color never --heading --line-number --stats ".*:.*"$password".*" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case AND the exact string
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 										rg -u --color never --heading --line-number --stats ":$password"$ ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
@@ -114,7 +114,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
 									#  DONT match the exact case AND DONT match the exact string
 									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-										rg -u --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u --ignore-case --color never --heading --line-number --stats *:*"$password"* ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
 									fi
 
 									# Instead of recompressing the directory we will jsut delete the
@@ -126,13 +126,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								# Search the directory for the desired string
 								#  DONT match the exact case AND DONT match the exact string
 								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-									rg -u --ignore-case --color never --heading --line-number --stats ":$password" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u --ignore-case --color never --heading --line-number --stats ".*:.*"$password".*" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case AND the exact string
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 									rg -u --color never --heading --line-number --stats ":$password"$ "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case but it can be a substring 
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-									rg -u --color never --heading --line-number --stats ":$password" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u --color never --heading --line-number --stats ".*:.*"$password".*" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
 								#  DONT match the exact case BUT match the exact string
 								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 									rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
@@ -155,13 +155,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Search the directory for the desired string
 									#  DONT match the exact case AND DONT match the exact string
 									if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-										rg -u --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u --ignore-case --color never --heading --line-number --stats ".*:.*"$password".*" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case AND the exact string
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 										rg -u --color never --heading --line-number --stats ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case but it can be a substring 
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-										rg -u --color never --heading --line-number --stats ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u --color never --heading --line-number --stats ".*:.*"$password".*" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  DONT match the exact case BUT match the exact string
 									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 										rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -175,13 +175,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							else
 								#  DONT match the exact case AND DONT match the exact string
 								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-									rg -u --ignore-case --color never --heading --line-number --stats ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u --ignore-case --color never --heading --line-number --stats ".*:.*"$password".*" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case AND the exact string
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 									rg -u --color never --heading --line-number --stats ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case but it can be a substring 
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-									rg -u --color never --heading --line-number --stats ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u --color never --heading --line-number --stats ".*:.*"$password".*" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  DONT match the exact case BUT match the exact string
 								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 									rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -212,13 +212,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 									#  DONT match the exact case AND DONT match the exact string
 									if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-										rg -u -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u -iN --no-filename --no-heading ".*:.*"$password".*" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case AND the exact string
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 										rg -u -N --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case but it can be a substring 
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-										rg -u -N --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u -N --no-filename --no-heading ".*:.*"$password".*" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  DONT match the exact case BUT match the exact string
 									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 										rg -u -iN --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -231,13 +231,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							else
 								#  DONT match the exact case AND DONT match the exact string
 								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-									rg -u -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u -iN --no-filename --no-heading ".*:.*"$password".*" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case AND the exact string
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 									rg -u -N --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case but it can be a substring 
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-									rg -u -N --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u -N --no-filename --no-heading ".*:.*"$password".*" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  DONT match the exact case BUT match the exact string
 								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 									rg -u -iN --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -260,13 +260,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 									#  DONT match the exact case AND DONT match the exact string
 									if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-										rg -u -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u -iN --no-filename --no-heading ".*:.*"$password".*" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case AND the exact string
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 										rg -u -N --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  Match the exact case but it can be a substring 
 									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-										rg -u -N --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+										rg -u -N --no-filename --no-heading ".*:.*"$password".*" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
 									#  DONT match the exact case BUT match the exact string
 									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 										rg -u -iN --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -279,13 +279,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							else
 								#  DONT match the exact case AND DONT match the exact string
 								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-									rg -u -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u -iN --no-filename --no-heading ".*:.*"$password".*" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case AND the exact string
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 									rg -u -N --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  Match the exact case but it can be a substring 
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-									rg -u -N --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+									rg -u -N --no-filename --no-heading ".*:.*"$password".*" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
 								#  DONT match the exact case BUT match the exact string
 								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 									rg -u -iN --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -312,13 +312,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 								#  DONT match the exact case AND DONT match the exact string
 								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-									rg -u -i ":$password" ./data/"$name"
+									rg -u -i ".*:.*"$password".*" ./data/"$name"
 								#  Match the exact case AND the exact string
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 									rg -u ":$password"$ ./data/"$name"
 								#  Match the exact case but it can be a substring 
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-									rg -u ":$password" ./data/"$name"
+									rg -u ".*:.*"$password".*" ./data/"$name"
 								#  DONT match the exact case BUT match the exact string
 								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 									rg -u -i ":$password"$ ./data/"$name"
@@ -331,13 +331,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						else
 							#  DONT match the exact case AND DONT match the exact string
 							if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-								rg -u -i ":$password" "$file"
+								rg -u -i ".*:.*"$password".*" "$file"
 							#  Match the exact case AND the exact string
 							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 								rg -u ":$password"$ "$file"
 							#  Match the exact case but it can be a substring 
 							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-								rg -u ":$password" "$file"
+								rg -u ".*:.*"$password".*" "$file"
 							#  DONT match the exact case BUT match the exact string
 							elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 								rg -u -i ":$password"$ "$file"
@@ -360,13 +360,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 								#  DONT match the exact case AND DONT match the exact string
 								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-									rg -u -iN --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+									rg -u -iN --no-filename --no-heading ".*:.*"$password".*" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 								#  Match the exact case AND the exact string
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 									rg -u -N --no-filename --no-heading ":$password"$ ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 								#  Match the exact case but it can be a substring 
 								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-									rg -u -N --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+									rg -u -N --no-filename --no-heading ".*:.*"$password".*" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 								#  DONT match the exact case BUT match the exact string
 								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 									rg -u -iN --no-filename --no-heading ":$password"$ ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
@@ -379,13 +379,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						else
 							#  DONT match the exact case AND DONT match the exact string
 							if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
-								rg -u -iN --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								rg -u -iN --no-filename --no-heading ".*:.*"$password".*" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 							#  Match the exact case AND the exact string
 							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
 								rg -u -N --no-filename --no-heading ":$password"$ "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 							#  Match the exact case but it can be a substring 
 							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
-								rg -u -N --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								rg -u -N --no-filename --no-heading ".*:.*"$password".*" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 							#  DONT match the exact case BUT match the exact string
 							elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
 								rg -u -iN --no-filename --no-heading ":$password"$ "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''

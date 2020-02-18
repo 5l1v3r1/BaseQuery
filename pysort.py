@@ -30,8 +30,6 @@ Python Version:  3.7.1
 
 # Need TODO
 #TODO Make a docker instance
-# Create a low hard drive space mode where when searching for lets say @gmail.com it would decompress 'a.tar.zst'
-# search it and then recompress it after its done this way only one archive is decompressed at a time
 #
 # Use regex instead of testing strings by hand for checking for valid email and passwords
 # Add option for outputting meta data to console for queries besides @gamil
