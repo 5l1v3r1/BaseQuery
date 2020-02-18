@@ -55,6 +55,20 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				read -p "Would you like the output to include metadata? [y/n] " metadata 
 			done
 
+			read -p "Would you like your search to be case-sensitive? [y/n] " case_sensitive
+			# Checks input
+			while [[ "$case_sensitive" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Would you like your search to be case-sensitive? [y/n] " case_sensitive 
+			done
+
+			read -p "Would you like to match the exact string \"$password\"? [y/n] " match_exact
+			# Checks input
+			while [[ "$match_exact" != [YyNn] ]];do
+				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+				read -p "Would you like the output to include metadata? [y/n] " match_exact 
+			done
+
 			# Does the user want to output the results to a file
 			if [[ "$out_to_file" == [Yy] ]];then
 				# Make sure the outputfiles dir exists
@@ -89,16 +103,41 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
-									# Search the directory for the desired string
-									rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+
+									#  Match the exact case but it can be a substring 
+									if [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+										rg -u --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case AND the exact string
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+										rg -u --color never --heading --line-number --stats ":$password"$ ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+									#  DONT match the exact case BUT match the exact string
+									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+										rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+									#  DONT match the exact case AND DONT match the exact string
+									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+										rg -u --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
+									fi
+
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name".tar.zst
+									rm -f ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								rg --ignore-case --color never --heading --line-number --stats ":$password" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case AND DONT match the exact string
+								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+									rg -u --ignore-case --color never --heading --line-number --stats ":$password" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case AND the exact string
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+									rg -u --color never --heading --line-number --stats ":$password"$ "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case but it can be a substring 
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+									rg -u --color never --heading --line-number --stats ":$password" "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case BUT match the exact string
+								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+									rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ "$file"  >> ./OutputFiles/"PWD_$password"_output.txt
+								fi
 							fi	
 						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -115,15 +154,39 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  DONT match the exact case AND DONT match the exact string
+									if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+										rg -u --ignore-case --color never --heading --line-number --stats ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case AND the exact string
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+										rg -u --color never --heading --line-number --stats ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case but it can be a substring 
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+										rg -u --color never --heading --line-number --stats ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  DONT match the exact case BUT match the exact string
+									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+										rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									fi
+
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name".tar.zst
+									rm -f ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
-								# Search the directory for the desired string
-								rg --ignore-case --color never --heading --line-number --stats ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case AND DONT match the exact string
+								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+									rg -u --ignore-case --color never --heading --line-number --stats ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case AND the exact string
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+									rg -u --color never --heading --line-number --stats ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case but it can be a substring 
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+									rg -u --color never --heading --line-number --stats ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case BUT match the exact string
+								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+									rg -u --ignore-case --color never --heading --line-number --stats ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								fi
 							fi	
 						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -147,15 +210,39 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+
+									#  DONT match the exact case AND DONT match the exact string
+									if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+										rg -u -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case AND the exact string
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+										rg -u -N --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case but it can be a substring 
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+										rg -u -N --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  DONT match the exact case BUT match the exact string
+									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+										rg -u -iN --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									fi
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name".tar.zst
+									rm -f ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
-								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case AND DONT match the exact string
+								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+									rg -u -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case AND the exact string
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+									rg -u -N --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case but it can be a substring 
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+									rg -u -N --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case BUT match the exact string
+								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+									rg -u -iN --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								fi
 							fi	
 						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -170,17 +257,40 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# Grabs the name of the file from the path
 									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
-									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
-									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst
+
+									#  DONT match the exact case AND DONT match the exact string
+									if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+										rg -u -iN --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case AND the exact string
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+										rg -u -N --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  Match the exact case but it can be a substring 
+									elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+										rg -u -N --no-filename --no-heading ":$password" ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									#  DONT match the exact case BUT match the exact string
+									elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+										rg -u -iN --no-filename --no-heading ":$password"$ ./data/"$name" >> ./OutputFiles/"PWD_$password"_output.txt
+									fi	
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name".tar.zst
+									rm -f ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
-								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case AND DONT match the exact string
+								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+									rg -u -iN --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case AND the exact string
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+									rg -u -N --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  Match the exact case but it can be a substring 
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+									rg -u -N --no-filename --no-heading ":$password" "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								#  DONT match the exact case BUT match the exact string
+								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+									rg -u -iN --no-filename --no-heading ":$password"$ "$file" >> ./OutputFiles/"PWD_$password"_output.txt
+								fi
 							fi	
 						done
 						printf "\n" >> ./OutputFiles/"PWD_$password"_output.txt
@@ -201,16 +311,38 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 								# decompress the .tar.zst files
 								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
-								# Search the directory for the desired string
-								rg -i ":$password" ./data/"$name"
+								#  DONT match the exact case AND DONT match the exact string
+								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+									rg -u -i ":$password" ./data/"$name"
+								#  Match the exact case AND the exact string
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+									rg -u ":$password"$ ./data/"$name"
+								#  Match the exact case but it can be a substring 
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+									rg -u ":$password" ./data/"$name"
+								#  DONT match the exact case BUT match the exact string
+								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+									rg -u -i ":$password"$ ./data/"$name"
+								fi
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
-								rm -f ./data/"$name".tar.zst
+								rm -f ./data/"$name"
 							fi
 						#  We have an uncompressed directory
 						else
-							# Search the directory for the desired string
-							rg -i ":$password" "$file"
+							#  DONT match the exact case AND DONT match the exact string
+							if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+								rg -u -i ":$password" "$file"
+							#  Match the exact case AND the exact string
+							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+								rg -u ":$password"$ "$file"
+							#  Match the exact case but it can be a substring 
+							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+								rg -u ":$password" "$file"
+							#  DONT match the exact case BUT match the exact string
+							elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+								rg -u -i ":$password"$ "$file"
+							fi
 						fi	
 					done
 					
@@ -226,16 +358,39 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 								# decompress the .tar.zst files
 								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
-								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+
+								#  DONT match the exact case AND DONT match the exact string
+								if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+									rg -u -iN --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								#  Match the exact case AND the exact string
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+									rg -u -N --no-filename --no-heading ":$password"$ ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								#  Match the exact case but it can be a substring 
+								elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+									rg -u -N --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								#  DONT match the exact case BUT match the exact string
+								elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+									rg -u -iN --no-filename --no-heading ":$password"$ ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								fi
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
-								rm -f ./data/"$name".tar.zst
+								rm -f ./data/"$name"
 							fi
 						#  We have an uncompressed directory
 						else
-							# Search the directory for the desired string
-							rg -iN --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+							#  DONT match the exact case AND DONT match the exact string
+							if [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Nn] ]];then
+								rg -u -iN --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+							#  Match the exact case AND the exact string
+							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Yy] ]];then
+								rg -u -N --no-filename --no-heading ":$password"$ "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+							#  Match the exact case but it can be a substring 
+							elif [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
+								rg -u -N --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+							#  DONT match the exact case BUT match the exact string
+							elif [[ "$case_sensitive"  == [Nn]  && "$match_exact" == [Yy] ]];then
+								rg -u -iN --no-filename --no-heading ":$password"$ "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+							fi
 						fi	
 					done
 					
@@ -318,11 +473,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							# add a time stamp
 							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
 							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
-							rg --ignore-case --color never --heading --line-number --stats "$1" ./data/  >> ./OutputFiles/"$1"_output.txt
+							rg -u --ignore-case --color never --heading --line-number --stats "$1" ./data/  >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						# The user doesn't want timestamps
 						else
-							rg --ignore-case --color never --heading --line-number --stats "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
+							rg -u --ignore-case --color never --heading --line-number --stats "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						fi
 
@@ -332,11 +487,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							# add a time stamp
 							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
 							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
-							rg -iN --no-filename --no-heading "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
+							rg -u -iN --no-filename --no-heading "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						# No timestamp and no meta data
 						else
-							rg -iN --no-filename --no-heading "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
+							rg -u -iN --no-filename --no-heading "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						fi
 
@@ -345,10 +500,10 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				else # Send the output to the console
 					#  check to see if the user wants to see metadata
 					if [[ "$metadata" == [Yy] ]];then
-						rg -i "$1" ./data/
+						rg -u -i "$1" ./data/
 					# No metadata
 					else
-						rg -iN --no-filename --no-heading "$1" ./data/ | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+						rg -u -iN --no-filename --no-heading "$1" ./data/ | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 					fi 
 				fi
 
@@ -387,15 +542,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										rg --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name"  >> ./OutputFiles/"$1"_output.txt
+										rg -u --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name"  >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name".tar.zst
+										rm -f ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									rg --ignore-case --color never --heading --line-number --stats "$1" "$file"  >> ./OutputFiles/"$1"_output.txt
+									rg -u --ignore-case --color never --heading --line-number --stats "$1" "$file"  >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							#  Create seperation
@@ -414,15 +569,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										rg --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
+										rg -u --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name".tar.zst
+										rm -f ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									rg --ignore-case --color never --heading --line-number --stats "$1" "$file" >> ./OutputFiles/"$1"_output.txt
+									rg -u --ignore-case --color never --heading --line-number --stats "$1" "$file" >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -446,15 +601,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										rg -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
+										rg -u -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name".tar.zst
+										rm -f ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading "$1" "$file" >> ./OutputFiles/"$1"_output.txt
+									rg -u -iN --no-filename --no-heading "$1" "$file" >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -471,15 +626,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										rg -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
+										rg -u -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name".tar.zst
+										rm -f ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading "$1" "$file" >> ./OutputFiles/"$1"_output.txt
+									rg -u -iN --no-filename --no-heading "$1" "$file" >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -501,15 +656,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg -i "$1" ./data/"$name"
+									rg -u -i "$1" ./data/"$name"
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name".tar.zst
+									rm -f ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								rg -i "$1" "$file"
+								rg -u -i "$1" "$file"
 							fi	
 						done
 					# No metadata
@@ -525,15 +680,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading "$1" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+									rg -u -iN --no-filename --no-heading "$1" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name".tar.zst
+									rm -f ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading "$1" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
+								rg -u -iN --no-filename --no-heading "$1" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 							fi	
 						done
 					fi # metadata = y
@@ -582,7 +737,6 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		fi
 	fi
 
-
 	#  Check to make sure the user name is at least 4 chars and the email has a @
 	if [[ ${#user_name} -ge 4 ]] && [[ "$email" == *"@"* ]];then	
 		# Grab each individual character
@@ -609,7 +763,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					#  Check to see if the file exists
 					if [ -e ./data/"$first_char"/"$second_char"/"$third_char"/"$fourth_char".txt ];then
 						#  Open the file and search for the email address then only keep the passwords, iterate through the passwords and echo then
-						rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/"$fourth_char".txt | while read -r Line;do
+						rg -u -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/"$fourth_char".txt | while read -r Line;do
 							user_name="$(echo "$Line" | cut -f 1 -d ':')"
 							Password="$(echo "$Line" | cut -f 2- -d ':')"
 							# check if the user wants the output to a file
@@ -624,7 +778,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						
 						#  Check to see if the email is in the NOT VALID file
 						if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
-							rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
+							rg -u -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
 								user_name="$(echo "$Line" | cut -f 1 -d ':')"
 								Password="$(echo "$Line" | cut -f 2- -d ':')"
 								# check if the user wants the output to a file
@@ -641,7 +795,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  The file does not exists
 						#  Check to make sure the directory exists and the file exists for 0UTLIERS
 						if [[ -d "./data/$first_char/$second_char/$third_char/0UTLIERS" && -e "./data/$first_char/$second_char/$third_char/0UTLIERS/0utliers.txt" ]];then
-							rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/0UTLIERS/0utliers.txt | while read -r Line;do
+							rg -u -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/0UTLIERS/0utliers.txt | while read -r Line;do
 								user_name="$(echo "$Line" | cut -f 1 -d ':')"
 								Password="$(echo "$Line" | cut -f 2- -d ':')"
 								# check if the user wants the output to a file
@@ -657,7 +811,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 						#  Check to see if the email is in the NOT VALID file
 						if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
-							rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
+							rg -u -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
 								user_name="$(echo "$Line" | cut -f 1 -d ':')"
 								Password="$(echo "$Line" | cut -f 2- -d ':')"
 								# check if the user wants the output to a file
@@ -677,7 +831,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					fi
 					#  The third letter directory does not exists
 					if [[ -d "./data/$first_char/$second_char/0UTLIERS" && -e "./data/$first_char/$second_char/0UTLIERS/0utliers.txt" ]];then
-						rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/0UTLIERS/0utliers.txt | while read -r Line;do
+						rg -u -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/0UTLIERS/0utliers.txt | while read -r Line;do
 							user_name="$(echo "$Line" | cut -f 1 -d ':')"
 							Password="$(echo "$Line" | cut -f 2- -d ':')"
 							# check if the user wants the output to a file
@@ -693,7 +847,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 					#  Check to see if the email is in the NOT VALID file
 					if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
-						rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
+						rg -u -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
 							user_name="$(echo "$Line" | cut -f 1 -d ':')"
 							Password="$(echo "$Line" | cut -f 2- -d ':')"
 							# check if the user wants the output to a file
@@ -713,7 +867,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				fi
 				#  The second letter directory does not exists
 				if [[ -d "./data/$first_char/0UTLIERS" && -e "./data/$first_char/0UTLIERS/0utliers.txt" ]];then
-					rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/0UTLIERS/0utliers.txt | while read -r Line;do
+					rg -u -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/0UTLIERS/0utliers.txt | while read -r Line;do
 						user_name="$(echo "$Line" | cut -f 1 -d ':')"
 						Password="$(echo "$Line" | cut -f 2- -d ':')"
 						# check if the user wants the output to a file
@@ -729,7 +883,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 				#  Check to see if the email is in the NOT VALID file
 				if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
-					rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
+					rg -u -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
 						user_name="$(echo "$Line" | cut -f 1 -d ':')"
 						Password="$(echo "$Line" | cut -f 2- -d ':')"
 						# check if the user wants the output to a file
@@ -749,7 +903,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			fi
 			#  The first letter directory does not exists
 			if [[ -d ./data/0UTLIERS && -e ./data/0UTLIERS/0utliers.txt ]];then
-				rg -iN --no-filename --no-heading --color never "^$email" ./data/0UTLIERS/0utliers.txt | while read -r Line;do
+				rg -u -iN --no-filename --no-heading --color never "^$email" ./data/0UTLIERS/0utliers.txt | while read -r Line;do
 					user_name="$(echo "$Line" | cut -f 1 -d ':')"
 					Password="$(echo "$Line" | cut -f 2- -d ':')"
 					# check if the user wants the output to a file
@@ -765,7 +919,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 			#  Check to see if the email is in the NOT VALID file
 			if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
-				rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
+				rg -u -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
 					user_name="$(echo "$Line" | cut -f 1 -d ':')"
 					Password="$(echo "$Line" | cut -f 2- -d ':')"
 					# check if the user wants the output to a file
@@ -800,7 +954,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			#  The username is either not >= 4 or the email doesn't contain an @
 			#  Check to see if the email is in the NOT VALID file
 			if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
-				rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
+				rg -u -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
 					user_name="$(echo "$Line" | cut -f 1 -d ':')"
 					Password="$(echo "$Line" | cut -f 2- -d ':')"
 					# check if the user wants the output to a file
