@@ -120,7 +120,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name"
+									rm -rf ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
@@ -170,7 +170,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name"
+									rm -rf ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
@@ -226,7 +226,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									fi
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name"
+									rm -rf ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
@@ -274,7 +274,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									fi	
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name"
+									rm -rf ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
@@ -326,7 +326,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								fi
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
-								rm -f ./data/"$name"
+								rm -rf ./data/"$name"
 							fi
 						#  We have an uncompressed directory
 						else
@@ -374,7 +374,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								fi
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
-								rm -f ./data/"$name"
+								rm -rf ./data/"$name"
 							fi
 						#  We have an uncompressed directory
 						else
@@ -545,7 +545,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										rg -u --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name"  >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name"
+										rm -rf ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
@@ -572,7 +572,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										rg -u --ignore-case --color never --heading --line-number --stats "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name"
+										rm -rf ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
@@ -604,7 +604,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										rg -u -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name"
+										rm -rf ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
@@ -629,7 +629,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 										rg -u -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
-										rm -f ./data/"$name"
+										rm -rf ./data/"$name"
 									fi
 								#  We have an uncompressed directory
 								else
@@ -659,7 +659,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									rg -u -i "$1" ./data/"$name"
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name"
+									rm -rf ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
@@ -683,7 +683,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									rg -u -iN --no-filename --no-heading "$1" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
-									rm -f ./data/"$name"
+									rm -rf ./data/"$name"
 								fi
 							#  We have an uncompressed directory
 							else
