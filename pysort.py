@@ -565,6 +565,8 @@ if __name__ == '__main__':
                     if line != "":
                         place_data(line, export_path, touchedFiles)
                         total_lines += 1
+                #  Run sort -u one last time to make sure the file is unique
+                os.system("sort -u -o /Logs/TouchedFilesDuringImport.txt /Logs/TouchedFilesDuringImport.txt")
             except Exception as e:
                 print(RED + "Exception: " + str(e) + NC)
     stop_time = time.time()

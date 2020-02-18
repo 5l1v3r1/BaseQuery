@@ -489,8 +489,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 			#  Export database as password list
 			elif [ "$answer" -eq 6 ];then
-				OutputFile="BQPasswordListExport__$(date +'%m_%d_%Y__%H_%M_%S').lst"
-				printf "${GREEN}[+]${NC} Exporting all passwords to $OutputFile \n"
+				OutputFile="./OutputFiles/BQPasswordListExport__$(date +'%m_%d_%Y__%H_%M_%S').lst"
+				printf "${GREEN}[+]${NC} Exporting all passwords to ${GREEN}$OutputFile${NC} \n"
 				printf "${YELLOW}[!]${NC} This might take a while...\n"
 				S=$SECONDS
 				#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
@@ -504,7 +504,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							# decompress the .tar.zst files
 							tar --use-compress-program=zstd -xf "$file"	
 							# Search the directory for the desired string
-							./export_password_list.sh "./OutputFiles/$OutputFile" ./data/"$name" 
+							./export_password_list.sh "$OutputFile" ./data/"$name" 
 							# Instead of recompressing the directory we will jsut delete the
 							# uncompressed version and keep the compressed version
 							rm -rf ./data/"$name"
@@ -512,12 +512,15 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					#  We have an uncompressed directory
 					else
 						# Search the directory for the desired string
-						./export_password_list.sh "./OutputFiles/$OutputFile" "$file" 
+						./export_password_list.sh "$OutputFile" "$file" 
 					fi	
 				done
 				echo
+				printf "${GREEN}[+]${NC} Sorting and de-duplicating ${GREEN}$OutputFile${NC} \n"
+				sort -u -o "$OutputFile" "$OutputFile"
 				SS=$SECONDS
-				echo "$(( S - SS )) total amount of seconds"
+				printf "${YELLOW}[!]${NC}Finished entire export process in $(( SS - S )) seconds!\n"
+				echo
 
 			elif [ "$answer" -eq 7 ];then
 				#  Sort and de-duplicate the entire database

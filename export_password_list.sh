@@ -36,7 +36,6 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 	start=$SECONDS
 	# Searches the uncompressed dir and outputs results 
 	rg -uiN --no-filename --no-heading ":" "$data_dir" | cut -d ":" -f2 >> "$OutputFile"
-	sort -u -o "$OutputFile" "$OutputFile"
 	stop=$SECONDS
 	difference=$(( stop - start ))
 	#  Print progress to user
