@@ -474,7 +474,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				done
 			    printf "${YELLOW}[!]${NC} Exiting Harvest Emails Using Hunter.io\n"
 
-
+			#  Clear log file
 			elif [ "$answer" -eq 5 ];then
 				read -p "Are you sure? This log file contains all hashes for previously imported databases! [y/n] " answer
 				while [[ "$answer" != [YyNn] ]];do
@@ -487,7 +487,31 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					printf "${GREEN}[!] importedDBS.log has been cleared!${NC}\n"
 				fi
 
+			#  Export database as password list
 			elif [ "$answer" -eq 6 ];then
+
+				#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+				find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+					#  If we have a compressed directory
+					if [[ "$file" =~ \.tar\.zst$ ]];then
+						#  check to make sure you dont decompress the working directory
+						if [ "$file" != "data/" ];then
+							# Grabs the name of the file from the path
+							name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+							# decompress the .tar.zst files
+							tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+							# Search the directory for the desired string
+							./export_password_list.sh ./data/"$name"
+							# Instead of recompressing the directory we will jsut delete the
+							# uncompressed version and keep the compressed version
+							rm -f ./data/"$name"
+					#  We have an uncompressed directory
+					else
+						# Search the directory for the desired string
+						./export_password_list.sh "$file"
+					fi	
+				done
+
 				#  Export all passwords from the basequery database as a wordlist
 				printf "${GREEN}[+]${NC} Decompressing files\n"
 				./decompress.sh

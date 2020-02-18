@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'  # No Color
 
 data_dir="./data/"
-if [ $# -ge 1 ];then
+if [ $# -eq 1 ];then
 	data_dir ="$1"
 fi
 
@@ -26,7 +26,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 	printf "${YELLOW}[!]${NC} This might take a while...\n"
 	#  Goes through the data/ lists all the 
 	start=$SECONDS
-	echo "$(rg -iN --no-filename --no-heading ':' $data_dir)" | cut -d ':' -f2 >> "$PasswordList"
+	rg -uiN --no-filename --no-heading ':' "$data_dir" | cut -d ':' -f2 >> "$PasswordList"
 	sort -u -o "$PasswordList" "$PasswordList"
 	stop=$SECONDS
 	difference=$(( stop - start ))

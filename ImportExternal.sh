@@ -38,7 +38,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				arr=(${inputfile})
 				file_SHA_sum="$(md5sum "$inputfile" | awk '{print$1}')"
 				#  check to see if the database has already been imported
-				if [ "$(rg $file_SHA_sum -c $pwd/Logs/importedDBS.log)" == "" ];then
+				if [ "$(rg -u $file_SHA_sum -c $pwd/Logs/importedDBS.log)" == "" ];then
 					let i=i+1
 				fi
 				_constr+="${arr[2]}"
@@ -73,7 +73,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				find $dataDir -type f -exec echo {} \; | while read -r inputfile;do
 					file_SHA_sum="$(md5sum "$inputfile" | awk '{print$1}')"
 					#  check to see if the database has already been imported
-					if [ "$(rg $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
+					if [ "$(rg -u $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
 						# Gets the file name from the full path
 						name=$(echo $inputfile | rev | cut -d'/' -f 1 | rev)
 						# Grabs the full path excluding the filename

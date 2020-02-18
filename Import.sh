@@ -32,7 +32,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			arr=(${inputfile})
 			file_SHA_sum="$(md5sum $dataDir/PutYourDataBasesHere/$inputfile | awk '{print$1}')"
 			#  check to see if the database has already been imported
-			if [ "$(rg $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
+			if [ "$(rg -u $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
 				let i=i+1
 			fi
 			_constr+="${arr[2]}"
@@ -78,7 +78,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			find PutYourDataBasesHere -type f -exec echo {} \; | cut -f 2- -d "/" | while read -r inputfile;do
 				file_SHA_sum="$(md5sum $dataDir/PutYourDataBasesHere/$inputfile | awk '{print$1}')"
 				#  check to see if the database has already been imported
-				if [ "$(rg $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
+				if [ "$(rg -u $file_SHA_sum -c ./Logs/importedDBS.log)" == "" ];then
 
 					if [ $# -eq 1 ];then
 						#  Import files from PutYourDataBasesHere and export somewhere else
