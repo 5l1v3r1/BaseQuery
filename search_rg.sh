@@ -61,7 +61,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				if ! [ -d ./OutputFiles ];then
 					mkdir OutputFiles
 				fi
-				printf "${GREEN}[+]${NC} Outputting all results to ${GREEN}$(pwd)/OutputFiles/PWD_$password_output.txt${NC}\n"
+				printf "${GREEN}[+]${NC} Outputting all results to ${GREEN}$(pwd)/OutputFiles/PWD_%s_output.txt${NC}\n" "$password"
 				printf "${GREEN}[+]${NC} Please wait this could take a few minutes!\n"
 
 			fi
@@ -82,7 +82,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 							#  If we have a compressed directory
-							if [[ "$file" = *.tar.zst ]];then
+							if [[ "$file" =~ \.tar\.zst$ ]];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
@@ -107,7 +107,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 							#  If we have a compressed directory
-							if [[ "$file" = *.tar.zst ]];then
+							if [[ "$file" =~ \.tar\.zst$ ]];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
@@ -139,7 +139,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 							#  If we have a compressed directory
-							if [[ "$file" = *.tar.zst ]];then
+							if [[ "$file" =~ \.tar\.zst$ ]];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
@@ -164,7 +164,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 							#  If we have a compressed directory
-							if [[ "$file" = *.tar.zst ]];then
+							if [[ "$file" =~ \.tar\.zst$ ]];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
@@ -194,7 +194,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 					find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 						#  If we have a compressed directory
-						if [[ "$file" = *.tar.zst ]];then
+						if [[ "$file" =~ \.tar\.zst$ ]];then
 							#  check to make sure you dont decompress the working directory
 							if [ "$file" != "data/" ];then
 								# Grabs the name of the file from the path
@@ -219,7 +219,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 					find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 						#  If we have a compressed directory
-						if [[ "$file" = *.tar.zst ]];then
+						if [[ "$file" =~ \.tar\.zst$ ]];then
 							#  check to make sure you dont decompress the working directory
 							if [ "$file" != "data/" ];then
 								# Grabs the name of the file from the path
@@ -379,7 +379,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 								#  If we have a compressed directory
-								if [[ "$file" = *.tar.zst ]];then
+								if [[ "$file" =~ \.tar\.zst$ ]];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
@@ -406,7 +406,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 								#  If we have a compressed directory
-								if [[ "$file" = *.tar.zst ]];then
+								if [[ "$file" =~ \.tar\.zst$ ]];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
@@ -438,7 +438,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 								#  If we have a compressed directory
-								if [[ "$file" = *.tar.zst ]];then
+								if [[ "$file" =~ \.tar\.zst$ ]];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
@@ -463,7 +463,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 							find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 								#  If we have a compressed directory
-								if [[ "$file" = *.tar.zst ]];then
+								if [[ "$file" =~ \.tar\.zst$ ]];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
@@ -493,7 +493,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 							#  If we have a compressed directory
-							if [[ "$file" = *.tar.zst ]];then
+							if [[ "$file" =~ \.tar\.zst$ ]];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
@@ -517,7 +517,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 						find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 							#  If we have a compressed directory
-							if [[ "$file" = *.tar.zst ]];then
+							if [[ "$file" =~ \.tar\.zst$ ]];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
