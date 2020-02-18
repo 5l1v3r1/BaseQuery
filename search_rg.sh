@@ -227,7 +227,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								# decompress the .tar.zst files
 								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+								rg -iN --no-filename --no-heading ":$password" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 								# Instead of recompressing the directory we will jsut delete the
 								# uncompressed version and keep the compressed version
 								rm -f ./data/"$name".tar.zst
@@ -235,7 +235,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  We have an uncompressed directory
 						else
 							# Search the directory for the desired string
-							rg -iN --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+							rg -iN --no-filename --no-heading ":$password" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 						fi	
 					done
 					
@@ -348,7 +348,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						rg -i "$1" ./data/
 					# No metadata
 					else
-						rg -iN --no-filename --no-heading "$1" ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+						rg -iN --no-filename --no-heading "$1" ./data/ | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 					fi 
 				fi
 
@@ -525,7 +525,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading "$1" ./data/"$name" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+									rg -iN --no-filename --no-heading "$1" ./data/"$name" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
@@ -533,7 +533,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading "$1" "$file" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+								rg -iN --no-filename --no-heading "$1" "$file" | sed -e ''/:/s//"$(printf '\033[0;31m:')"/'' -e ''/$/s//"$(printf '\033[0m')"/''
 							fi	
 						done
 					fi # metadata = y
