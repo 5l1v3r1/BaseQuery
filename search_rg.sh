@@ -22,8 +22,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 	# If directory is not empty
 	if [ "$(ls -A ./data)" ]; then
 		# Grab everything before the @ sign
-		user_name=$(echo $1 | cut -d @ -f 1 | awk '{print tolower($0)}')
-		email=$(echo $1 | cut -d : -f 1 | awk '{print tolower($0)}')
+		user_name=$(echo "$1" | cut -d @ -f 1 | awk '{print tolower($0)}')
+		email=$(echo "$1" | cut -d : -f 1 | awk '{print tolower($0)}')
 		check_for_at=${1:0:1}
 		check_for_pwd=${1:0:4}
 
@@ -86,7 +86,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
-									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
@@ -111,7 +111,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
-									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
@@ -143,7 +143,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
-									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
@@ -168,7 +168,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
-									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
@@ -198,7 +198,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  check to make sure you dont decompress the working directory
 							if [ "$file" != "data/" ];then
 								# Grabs the name of the file from the path
-								name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+								name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 								# decompress the .tar.zst files
 								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 								# Search the directory for the desired string
@@ -223,7 +223,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  check to make sure you dont decompress the working directory
 							if [ "$file" != "data/" ];then
 								# Grabs the name of the file from the path
-								name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+								name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 								# decompress the .tar.zst files
 								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 								# Search the directory for the desired string
@@ -332,11 +332,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							# add a time stamp
 							printf "\n/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n\n" >>  ./OutputFiles/"$1"_output.txt
 							printf "The results below were generated at:\n$(date)\n\n" >>  ./OutputFiles/"$1"_output.txt
-							rg -iN --no-filename --no-heading $1 ./data/ >> ./OutputFiles/"$1"_output.txt
+							rg -iN --no-filename --no-heading "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						# No timestamp and no meta data
 						else
-							rg -iN --no-filename --no-heading $1 ./data/ >> ./OutputFiles/"$1"_output.txt
+							rg -iN --no-filename --no-heading "$1" ./data/ >> ./OutputFiles/"$1"_output.txt
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
 						fi
 
@@ -345,10 +345,10 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				else # Send the output to the console
 					#  check to see if the user wants to see metadata
 					if [[ "$metadata" == [Yy] ]];then
-						rg -i $1 ./data/
+						rg -i "$1" ./data/
 					# No metadata
 					else
-						rg -iN --no-filename --no-heading $1 ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+						rg -iN --no-filename --no-heading "$1" ./data/ | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
 					fi 
 				fi
 
@@ -383,7 +383,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
-										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
@@ -410,7 +410,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
-										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
@@ -442,11 +442,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
-										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										rg -iN --no-filename --no-heading $1 ./data/$name >> ./OutputFiles/"$1"_output.txt
+										rg -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
@@ -454,7 +454,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading $1 $file >> ./OutputFiles/"$1"_output.txt
+									rg -iN --no-filename --no-heading "$1" "$file" >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -467,11 +467,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									#  check to make sure you dont decompress the working directory
 									if [ "$file" != "data/" ];then
 										# Grabs the name of the file from the path
-										name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+										name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 										# decompress the .tar.zst files
 										tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 										# Search the directory for the desired string
-										rg -iN --no-filename --no-heading $1 ./data/$name >> ./OutputFiles/"$1"_output.txt
+										rg -iN --no-filename --no-heading "$1" ./data/"$name" >> ./OutputFiles/"$1"_output.txt
 										# Instead of recompressing the directory we will jsut delete the
 										# uncompressed version and keep the compressed version
 										rm -f ./data/"$name".tar.zst
@@ -479,7 +479,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  We have an uncompressed directory
 								else
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading $1 $file >> ./OutputFiles/"$1"_output.txt
+									rg -iN --no-filename --no-heading "$1" "$file" >> ./OutputFiles/"$1"_output.txt
 								fi	
 							done
 							printf "\n" >> ./OutputFiles/"$1"_output.txt
@@ -497,11 +497,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
-									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg -i $1 ./data/$name
+									rg -i "$1" ./data/"$name"
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
@@ -509,7 +509,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								rg -i $1 $file
+								rg -i "$1" "$file"
 							fi	
 						done
 					# No metadata
@@ -521,11 +521,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 								#  check to make sure you dont decompress the working directory
 								if [ "$file" != "data/" ];then
 									# Grabs the name of the file from the path
-									name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 									# Search the directory for the desired string
-									rg -iN --no-filename --no-heading $1 ./data/$name | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+									rg -iN --no-filename --no-heading "$1" ./data/"$name" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
 									# Instead of recompressing the directory we will jsut delete the
 									# uncompressed version and keep the compressed version
 									rm -f ./data/"$name".tar.zst
@@ -533,7 +533,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							#  We have an uncompressed directory
 							else
 								# Search the directory for the desired string
-								rg -iN --no-filename --no-heading $1 $file | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
+								rg -iN --no-filename --no-heading "$1" "$file" | sed -e ''/:/s//$(printf '\033[0;31m:')/'' -e ''/$/s//$(printf '\033[0m')/''
 							fi	
 						done
 					fi # metadata = y
@@ -610,8 +610,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					if [ -e ./data/"$first_char"/"$second_char"/"$third_char"/"$fourth_char".txt ];then
 						#  Open the file and search for the email address then only keep the passwords, iterate through the passwords and echo then
 						rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/"$fourth_char".txt | while read -r Line;do
-							user_name="$(echo $Line | cut -f 1 -d ':')"
-							Password="$(echo $Line | cut -f 2- -d ':')"
+							user_name="$(echo "$Line" | cut -f 1 -d ':')"
+							Password="$(echo "$Line" | cut -f 2- -d ':')"
 							# check if the user wants the output to a file
 							if [[ "$out_to_file" == [Yy] ]];then 
 								echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -625,8 +625,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Check to see if the email is in the NOT VALID file
 						if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
 							rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
-								user_name="$(echo $Line | cut -f 1 -d ':')"
-								Password="$(echo $Line | cut -f 2- -d ':')"
+								user_name="$(echo "$Line" | cut -f 1 -d ':')"
+								Password="$(echo "$Line" | cut -f 2- -d ':')"
 								# check if the user wants the output to a file
 								if [[ "$out_to_file" == [Yy] ]];then 
 									echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -642,8 +642,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Check to make sure the directory exists and the file exists for 0UTLIERS
 						if [[ -d "./data/$first_char/$second_char/$third_char/0UTLIERS" && -e "./data/$first_char/$second_char/$third_char/0UTLIERS/0utliers.txt" ]];then
 							rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/"$third_char"/0UTLIERS/0utliers.txt | while read -r Line;do
-								user_name="$(echo $Line | cut -f 1 -d ':')"
-								Password="$(echo $Line | cut -f 2- -d ':')"
+								user_name="$(echo "$Line" | cut -f 1 -d ':')"
+								Password="$(echo "$Line" | cut -f 2- -d ':')"
 								# check if the user wants the output to a file
 								if [[ "$out_to_file" == [Yy] ]];then 
 									echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -658,8 +658,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						#  Check to see if the email is in the NOT VALID file
 						if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
 							rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
-								user_name="$(echo $Line | cut -f 1 -d ':')"
-								Password="$(echo $Line | cut -f 2- -d ':')"
+								user_name="$(echo "$Line" | cut -f 1 -d ':')"
+								Password="$(echo "$Line" | cut -f 2- -d ':')"
 								# check if the user wants the output to a file
 								if [[ "$out_to_file" == [Yy] ]];then 
 									echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -673,13 +673,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					fi
 				else
 					if [[ "$out_to_file" == [Nn] ]];then
-						printf "${GREEN}Email Address: "$email"${NC}\n"
+						printf "${GREEN}Email Address: ""$email""${NC}\n"
 					fi
 					#  The third letter directory does not exists
 					if [[ -d "./data/$first_char/$second_char/0UTLIERS" && -e "./data/$first_char/$second_char/0UTLIERS/0utliers.txt" ]];then
 						rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/"$second_char"/0UTLIERS/0utliers.txt | while read -r Line;do
-							user_name="$(echo $Line | cut -f 1 -d ':')"
-							Password="$(echo $Line | cut -f 2- -d ':')"
+							user_name="$(echo "$Line" | cut -f 1 -d ':')"
+							Password="$(echo "$Line" | cut -f 2- -d ':')"
 							# check if the user wants the output to a file
 							if [[ "$out_to_file" == [Yy] ]];then 
 								echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -694,8 +694,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					#  Check to see if the email is in the NOT VALID file
 					if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
 						rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
-							user_name="$(echo $Line | cut -f 1 -d ':')"
-							Password="$(echo $Line | cut -f 2- -d ':')"
+							user_name="$(echo "$Line" | cut -f 1 -d ':')"
+							Password="$(echo "$Line" | cut -f 2- -d ':')"
 							# check if the user wants the output to a file
 							if [[ "$out_to_file" == [Yy] ]];then 
 								echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -709,13 +709,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				fi
 			else
 				if [[ "$out_to_file" == [Nn] ]];then
-					printf "${GREEN}Email Address: "$email"${NC}\n"
+					printf "${GREEN}Email Address: ""$email""${NC}\n"
 				fi
 				#  The second letter directory does not exists
 				if [[ -d "./data/$first_char/0UTLIERS" && -e "./data/$first_char/0UTLIERS/0utliers.txt" ]];then
 					rg -iN --no-filename --no-heading --color never "^$email" ./data/"$first_char"/0UTLIERS/0utliers.txt | while read -r Line;do
-						user_name="$(echo $Line | cut -f 1 -d ':')"
-						Password="$(echo $Line | cut -f 2- -d ':')"
+						user_name="$(echo "$Line" | cut -f 1 -d ':')"
+						Password="$(echo "$Line" | cut -f 2- -d ':')"
 						# check if the user wants the output to a file
 						if [[ "$out_to_file" == [Yy] ]];then 
 							echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -730,8 +730,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				#  Check to see if the email is in the NOT VALID file
 				if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
 					rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
-						user_name="$(echo $Line | cut -f 1 -d ':')"
-						Password="$(echo $Line | cut -f 2- -d ':')"
+						user_name="$(echo "$Line" | cut -f 1 -d ':')"
+						Password="$(echo "$Line" | cut -f 2- -d ':')"
 						# check if the user wants the output to a file
 						if [[ "$out_to_file" == [Yy] ]];then 
 							echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -745,13 +745,13 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			fi
 		else
 			if [[ "$out_to_file" == [Nn] ]];then
-				printf "${GREEN}Email Address: "$email"${NC}\n"
+				printf "${GREEN}Email Address: ""$email""${NC}\n"
 			fi
 			#  The first letter directory does not exists
 			if [[ -d ./data/0UTLIERS && -e ./data/0UTLIERS/0utliers.txt ]];then
 				rg -iN --no-filename --no-heading --color never "^$email" ./data/0UTLIERS/0utliers.txt | while read -r Line;do
-					user_name="$(echo $Line | cut -f 1 -d ':')"
-					Password="$(echo $Line | cut -f 2- -d ':')"
+					user_name="$(echo "$Line" | cut -f 1 -d ':')"
+					Password="$(echo "$Line" | cut -f 2- -d ':')"
 					# check if the user wants the output to a file
 					if [[ "$out_to_file" == [Yy] ]];then 
 						echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -766,8 +766,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			#  Check to see if the email is in the NOT VALID file
 			if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
 				rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
-					user_name="$(echo $Line | cut -f 1 -d ':')"
-					Password="$(echo $Line | cut -f 2- -d ':')"
+					user_name="$(echo "$Line" | cut -f 1 -d ':')"
+					Password="$(echo "$Line" | cut -f 2- -d ':')"
 					# check if the user wants the output to a file
 					if [[ "$out_to_file" == [Yy] ]];then 
 						echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -792,7 +792,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		fi
 		# Supreses output
 		if [[ "$out_to_file" == [Nn] ]];then
-			printf "${GREEN}Email Address: "$email"${NC}\n"
+			printf "${GREEN}Email Address: ""$email""${NC}\n"
 		fi
 
 		# Checks if the email has an @ 
@@ -801,8 +801,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			#  Check to see if the email is in the NOT VALID file
 			if [[ -d ./data/NOTVALID && -e ./data/NOTVALID/FAILED_TEST.txt ]];then
 				rg -iN --no-filename --no-heading --color never "^$email" ./data/NOTVALID/FAILED_TEST.txt | while read -r Line;do
-					user_name="$(echo $Line | cut -f 1 -d ':')"
-					Password="$(echo $Line | cut -f 2- -d ':')"
+					user_name="$(echo "$Line" | cut -f 1 -d ':')"
+					Password="$(echo "$Line" | cut -f 2- -d ':')"
 					# check if the user wants the output to a file
 					if [[ "$out_to_file" == [Yy] ]];then 
 						echo  "$Line" >> ./OutputFiles/"$1"_output.txt
@@ -821,8 +821,3 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 else
 	printf "${RED}ERROR: Please change directories to the BaseQuery root directory${NC}\n"
 fi
-
-
-
-
-

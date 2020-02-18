@@ -26,7 +26,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			#  check to make sure you dont decompress the working directory
 			if [ "$compressed_file" != "data/" ];then
 				#  Grabs the name of the file from the path
-				name="$(echo $compressed_file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+				name="$(echo "$compressed_file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 				# decompress the .tar.zst files
 				tar --use-compress-program=zstd -xf ./data/"$name".tar.zst && rm -rf data/"$name".tar.zst				
 			fi	
@@ -37,9 +37,9 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 		  case $opt in
 		    d )
 				#  Check if were given a valid directory
-				if [ -d $OPTARG ]; then
+				if [ -d "$OPTARG" ]; then
 					#  Checks to see if the directory is not empty ( if empty nothing to decompress )
-					if [ "$(ls -A $OPTARG)" ]; then
+					if [ "$(ls -A "$OPTARG")" ]; then
 						# Iterate through all of the compressed archives in the supplied dir
 						find "$OPTARG" -type f -name "*.tar.zst" | sort | while read -r compressed_file; do
 							file_name_with_extentions=$(echo "$compressed_file" | rev | cut -d '/' -f 1 | rev)
@@ -72,7 +72,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			p )
 				if [ -f "$OPTARG" ];then
 					#  This strips away the file from the full path
-					directory_path="$(dirname $OPTARG)"
+					directory_path="$(dirname "$OPTARG")"
 					# decompress the .tar.zst file
 					tar --use-compress-program=zstd -xf "$OPTARG" -C "$directory_path" && rm -rf "$OPTARG"	
 				else
