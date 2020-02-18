@@ -504,7 +504,8 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							./export_password_list.sh ./data/"$name"
 							# Instead of recompressing the directory we will jsut delete the
 							# uncompressed version and keep the compressed version
-							rm -f ./data/"$name"
+							rm -rf ./data/"$name"
+						fi
 					#  We have an uncompressed directory
 					else
 						# Search the directory for the desired string

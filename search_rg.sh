@@ -103,7 +103,6 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 									name="$(echo "$file" | cut -f 2- -d "/" | cut -f 1 -d '.')"
 									# decompress the .tar.zst files
 									tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
-
 									#  Match the exact case but it can be a substring 
 									if [[ "$case_sensitive"  == [Yy]  && "$match_exact" == [Nn] ]];then
 										rg -u --color never --heading --line-number --stats ":$password" ./data/"$name"  >> ./OutputFiles/"PWD_$password"_output.txt
