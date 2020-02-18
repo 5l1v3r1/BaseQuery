@@ -87,7 +87,7 @@ if __name__ == '__main__':
             print("ERROR: ./Logs/temp_benchmark_DB/" + FILE_NAME + " not found! Did you delete it?")
             exit(1)
         print()
-        print(GREEN + "[!]" + NC + " Removing the temporary benchmark data!")
+        print(YELLOW + "[!]" + NC + " Removing the temporary benchmark data!")
 
         #  Remove the temporary BQ database
         folder = path + "/Logs/temp_benchmark_DB/data"
@@ -111,7 +111,6 @@ if __name__ == '__main__':
             os.system('cls' if os.name == 'nt' else 'clear')
             print(YELLOW + "[!]" + NC + " Your computer can process " + RED + str(round(total_lines / AMT_SECONDS, 2)) + NC + " lines per second!")
             print(YELLOW + "[!]" + NC + " Your computer processed " + str(total_lines) + " lines in " + str(AMT_SECONDS) + " seconds! The test file had a total of " + str(num_lines) + " lines!")
-            print(YELLOW + "[!] Please note this is a WORST CASE SCENARIO! Expect slightly better results during import!" + NC)
             print(YELLOW + "[!] For the best results make sure your laptop is plugged into a power source!" + NC)
             print()
             print(GREEN + "[+]" + NC + " To import " + GREEN + amt_lines + NC + " lines")

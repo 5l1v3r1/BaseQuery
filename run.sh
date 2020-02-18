@@ -150,6 +150,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				echo
 				while true;do
 					printf "${YELLOW}[!]${NC} This writes to a temporary directory and won't touch your BaseQuery database!\n"
+					printf "${YELLOW}[!]${NC} You do not need to have any databases in the PutYourDataBasesHere/ directory!\n"
 					printf "${YELLOW}[!]${NC} This will tell you how much time is needed to import the specified amount of lines...\n"
 					read -p "('q' to quit) Lines>> " num_lines
 					echo
@@ -158,7 +159,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							# Log Entry
 							echo "[+] run.sh COMMAND '2' arg [$num_lines]	[ $(date) ]" >> ./Logs/ActivityLogs.log
 							printf "${GREEN}[+]${NC} Starting Benchmark! This Will Take 30 Seconds.\n"
-							/usr/bin/python3.7 benchmark.py "$num_lines"
+							python3.7 benchmark.py "$num_lines"
 						else
 							printf "${YELLOW}[!]${NC} Invalid Input\n"
 						fi
