@@ -492,12 +492,14 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 
 				#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
 				find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+					echo "FILE: $file"
 					#  If we have a compressed directory
 					if [[ "$file" =~ \.tar\.zst$ ]];then
 						#  check to make sure you dont decompress the working directory
 						if [ "$file" != "data/" ];then
 							# Grabs the name of the file from the path
 							name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+							echo "NAME: $name"
 							# decompress the .tar.zst files
 							tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
 							# Search the directory for the desired string
@@ -512,13 +514,6 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 						./export_password_list.sh "$file"
 					fi	
 				done
-
-				#  Export all passwords from the basequery database as a wordlist
-				printf "${GREEN}[+]${NC} Decompressing files\n"
-				./decompress.sh
-				./export_password_list.sh
-				printf "${GREEN}[+]${NC} Compressing files\n"
-				./compress.sh
 
 			elif [ "$answer" -eq 7 ];then
 				#  Sort and de-duplicate the entire database
