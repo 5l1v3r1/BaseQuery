@@ -554,17 +554,15 @@ if __name__ == '__main__':
                     if total_lines % 10000 == 0 and total_lines != 0:
                         interval_time = time.time()
                         print(GREEN + "[+]" + NC + " Processing line number: " + str(total_lines) + "\nLine: " + line + "\nTime: " + str(("%.2f" % (interval_time - start_time))))
-                    #  Check every 100,000 lines and run `sort -u` on /Logs/TouchedFilesDuringImport.txt
+                    #  Check every 100,000 lines and run `sort -u` on ./Logs/TouchedFilesDuringImport.txt
                     if total_lines % 100000 == 0 and total_lines != 0:
                         print(YELLOW + "[!]" + NC + " Cleaning up /Logs/TouchedFilesDuringImport.txt")
                         # Sort and delete duplicates
-                        os.system("sort -u -o /Logs/TouchedFilesDuringImport.txt /Logs/TouchedFilesDuringImport.txt")
+                        os.system("sort -u -o ./Logs/TouchedFilesDuringImport.txt ./Logs/TouchedFilesDuringImport.txt")
                     line = line.strip()
                     if line != "":
                         place_data(line, export_path, touchedFiles)
                         total_lines += 1
-                #  Run sort -u one last time to make sure the file is unique
-                os.system("sort -u -o /Logs/TouchedFilesDuringImport.txt /Logs/TouchedFilesDuringImport.txt")
             except Exception as e:
                 print(RED + "Exception: " + str(e) + NC)
     stop_time = time.time()

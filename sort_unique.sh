@@ -26,12 +26,12 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			start=$SECONDS
 			counter=0
 			#  Loop over each line
-			while read -r line; do
+			while read -r filepath; do
 				counter=$((counter+1))
 				#  Make sure the line is a path to a file that exists
-				if [ -e "$line" ];then
-					sort -u -o "$line" "$line"
-					echo -ne "Total Number Files Sorted and De-Duplicated $counter Current File: $line \033[0K \r "
+				if [ -e "$filepath" ];then
+					sort -u -o "$filepath" "$filepath"
+					echo -ne "Total Number Files Sorted and De-Duplicated $counter Current File: $filepath \033[0K \r "
 				fi
 			done < "$1"
 			stop=$SECONDS

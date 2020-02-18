@@ -70,7 +70,7 @@ if __name__ == '__main__':
                             if total_lines % 100000 == 0 and total_lines != 0:
                                 print(YELLOW + "[!]" + NC + " Cleaning up /Logs/TouchedFilesDuringImport.txt")
                                 # Sort and delete duplicates within the /Logs/TouchedFilesDuringImport.txt file
-                                os.system("sort -u -o /Logs/TouchedFilesDuringImport.txt /Logs/TouchedFilesDuringImport.txt")
+                                os.system("sort -u -o ./Logs/TouchedFilesDuringImport.txt ./Logs/TouchedFilesDuringImport.txt")
                             if (time.time() - start_time) <= AMT_SECONDS:
                                 line = line.strip()
                                 if line != "":

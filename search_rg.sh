@@ -62,11 +62,11 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				read -p "Would you like your search to be case-sensitive? [y/n] " case_sensitive 
 			done
 
-			read -p "Would you like to match the exact string \"$password\"? [y/n] " match_exact
+			read -p "Would you like to match \"$password\" exactly (No substringing within passwords)? [y/n] " match_exact
 			# Checks input
 			while [[ "$match_exact" != [YyNn] ]];do
 				printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
-				read -p "Would you like the output to include metadata? [y/n] " match_exact 
+				read -p "Would you like to match \"$password\" exactly (No substringing within passwords)? [y/n] " match_exact 
 			done
 
 			# Does the user want to output the results to a file
