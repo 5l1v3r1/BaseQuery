@@ -554,18 +554,22 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 					find "$path" -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
 						#  If we have a compressed directory
 						if [[ "$file" =~ \.tar\.zst$ ]];then
-							# Grabs the name of the file from the path
-							name="$(echo "$file" | rev | cut -d "/" -f 1 | rev | cut -d "." -f 1)"
-							# decompress the .tar.zst files
-							tar --use-compress-program=zstd -xf "$path"/"$name".tar.zst	
-							# Search the directory for the desired string
+							if [ "$file" != "$path" ];then
+								# Grabs the name of the file from the path
+								name="$(echo "$file" | rev | cut -d "/" -f 1 | rev | cut -d "." -f 1)"
+								#  This strips away the file from the full path
+								directory_path="$(dirname "$file")"
+								# decompress the .tar.zst files
+								tar --use-compress-program=zstd -xf "$file"	-C "$directory_path"
+								# Search the directory for the desired string
 
-							#  GO through every file in the data directory, using xargs is faster than -exec 
-							find "$path"/"$name" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+								#  GO through every file in the data directory, using xargs is faster than -exec 
+								find "$path"/"$name" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
 
-							# Instead of recompressing the directory we will just delete the
-							# uncompressed version and keep the compressed version
-							rm -rf "$path"/"$name"
+								# Instead of recompressing the directory we will just delete the
+								# uncompressed version and keep the compressed version
+								rm -rf "$path"/"$name"
+							fi
 						#  We have an uncompressed directory
 						else
 							# Search the directory for the desired string
