@@ -209,7 +209,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							printf "${YELLOW}[!]${NC} Exiting Query\n"
 							break
 						fi
-					#  The user wants the use an external directory
+					#  The user wants to use an external directory
 					else
 						if [[ $email != [Qq] ]]; then
 							if [ "$email" != "" ];then
@@ -513,7 +513,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 							tar --use-compress-program=zstd -xf "$file"	
 							# Search the directory for the desired string
 							./export_password_list.sh "$OutputFile" ./data/"$name" 
-							# Instead of recompressing the directory we will jsut delete the
+							# Instead of recompressing the directory we will just delete the
 							# uncompressed version and keep the compressed version
 							rm -rf ./data/"$name"
 						fi
@@ -527,14 +527,84 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 				printf "${GREEN}[+]${NC} Sorting and de-duplicating ${GREEN}$OutputFile${NC} \n"
 				sort -u -o "$OutputFile" "$OutputFile"
 				SS=$SECONDS
-				printf "${YELLOW}[!]${NC}Finished entire export process in $(( SS - S )) seconds!\n"
+				printf "${YELLOW}[!]${NC} Finished entire export process in $(( SS - S )) seconds!\n"
 				echo
 
-			elif [ "$answer" -eq 7 ];then
-				#  Sort and de-duplicate the entire database
-				printf "${GREEN}[+]${NC} This might take a while...\n"
-				#  GO through every file in the data directory, using xargs is faster than -exec 
-				find "./data/" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+			#  Sort and de-duplicate
+			elif [ "$answer" -eq 7 ];then 
+				read -p "An external directory? [y/n] " external
+				while [[ "$external" != [YyNn] ]];do
+					printf "${YELLOW}[!]${NC} Please enter either \"y\" or \"n\"!\n"
+					read -p "An external directory? [y/n] " external 
+				done
+
+				# Check an external BaseQuery directory
+				if [[ "$external" == [Yy] ]];then
+					read -p "Full path to external data/ directory " path
+					while [[ ! -d "$path"  && "$path" != [Qq] ]];do
+						read -p "Full path to external data/ directory [Q to quit]" path
+					done
+					if [[ "$path" == [Qq] ]];then
+						break
+					fi
+					#  Sort and de-duplicate the entire database
+					printf "${GREEN}[+]${NC} This might take a while...\n"
+
+					#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+					find "$path" -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+						#  If we have a compressed directory
+						if [[ "$file" =~ \.tar\.zst$ ]];then
+							# Grabs the name of the file from the path
+							name="$(echo "$file" | rev | cut -d "/" -f 1 | rev | cut -d "." -f 1)"
+							# decompress the .tar.zst files
+							tar --use-compress-program=zstd -xf "$path"/"$name".tar.zst	
+							# Search the directory for the desired string
+
+							#  GO through every file in the data directory, using xargs is faster than -exec 
+							find "$path"/"$name" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+
+							# Instead of recompressing the directory we will just delete the
+							# uncompressed version and keep the compressed version
+							rm -rf "$path"/"$name"
+						#  We have an uncompressed directory
+						else
+							# Search the directory for the desired string
+							find "$path"/"$name" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+						fi	
+					done
+
+				else #  use the data/ dir
+					#  Sort and de-duplicate the entire database
+					printf "${GREEN}[+]${NC} This might take a while...\n"
+
+					#  Iterate through all the directories and files that end in "*.tar.zst" in the data/ dir
+					find data/ -maxdepth 1 -name "*.tar.zst" -or -type d | tail -n +2 | sort | while read -r file;do
+						#  If we have a compressed directory
+						if [[ "$file" =~ \.tar\.zst$ ]];then
+							#  check to make sure you dont decompress the working directory
+							if [ "$file" != "data/" ];then
+								# Grabs the name of the file from the path
+								name="$(echo $file | cut -f 2- -d "/" | cut -f 1 -d '.')"
+								# decompress the .tar.zst files
+								tar --use-compress-program=zstd -xf ./data/"$name".tar.zst	
+								# Search the directory for the desired string
+
+								#  GO through every file in the data directory, using xargs is faster than -exec 
+								find "./data/$name" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+
+								# Instead of recompressing the directory we will just delete the
+								# uncompressed version and keep the compressed version
+								rm -rf ./data/"$name"
+							fi
+						#  We have an uncompressed directory
+						else
+							# Search the directory for the desired string
+							find "$file" -type f -name "*.txt" -print0 | xargs -0 -L 1 ./sort_unique.sh --sortthisfile
+						fi	
+					done
+				fi
+
+
 
 			elif [ "$answer" -eq 8 ];then
 				# Log Entry

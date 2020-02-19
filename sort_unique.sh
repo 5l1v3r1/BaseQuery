@@ -40,7 +40,7 @@ if [ "${PWD##*/}" == "BaseQuery" ];then
 			#  Clear the file
 			: > "$1"
 		else
-			printf "${RED}[!]${NC} ERROR $1 - File not found!\n"
+			printf "${RED}[!]${NC} ERROR $1 - File not found! {$1}\n"
 		fi
 	#  If the user provides the file that needs to be sorted
 	elif [ $# -eq 2 ];then

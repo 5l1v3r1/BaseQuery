@@ -550,16 +550,16 @@ if __name__ == '__main__':
         with open(file_path, 'r') as fp:
             try:
                 for line in fp:
+                    line = line.strip()
                     #  For every 10,000th line print an update to the user
                     if total_lines % 10000 == 0 and total_lines != 0:
                         interval_time = time.time()
-                        print(GREEN + "[+]" + NC + " Processing line number: " + str(total_lines) + "\nLine: " + line + "\nTime: " + str(("%.2f" % (interval_time - start_time))))
+                        print(GREEN + "[+]" + NC + " Processing line number: " + str(total_lines) + "\nLine: " + line + "\nTime: " + str(("%.2f" % (interval_time - start_time))) + "\n")
                     #  Check every 100,000 lines and run `sort -u` on ./Logs/TouchedFilesDuringImport.txt
                     if total_lines % 1000000 == 0 and total_lines != 0:
                         print(YELLOW + "[!]" + NC + " Cleaning up /Logs/TouchedFilesDuringImport.txt")
                         # Sort and delete duplicates
                         os.system("sort -u -o ./Logs/TouchedFilesDuringImport.txt ./Logs/TouchedFilesDuringImport.txt")
-                    line = line.strip()
                     if line != "":
                         place_data(line, export_path, touchedFiles)
                         total_lines += 1
